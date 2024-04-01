@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de1d38b9e9744d240aa9370071364f69, type: 3}
-  m_Name: LowVault
+  m_Name: Low Vault
   m_EditorClassIdentifier: 
-  animationName: LowVault
+  animationName: Low Vault
   minHeight: 0.1
   maxHeight: 0.9

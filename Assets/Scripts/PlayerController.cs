@@ -2,6 +2,7 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor.Animations;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -19,27 +20,31 @@ public class PlayerController : MonoBehaviour
 
 
     //
+    [Header("---Player Setting---")]
     [SerializeField] private CharacterState state;
     [SerializeField] private float speed;
     private CharacterController characterController;
-    private EnvironmentChecker environmentChecker;
     [SerializeField] private PlayerInput playerInput;
     [SerializeField] private Animator animator;
     [SerializeField] CinemachineVirtualCamera virtualCamera;
-    
+    [Header("---Movement---")]
     //Movement
     Vector2 vector2MovementInput;
     Vector3 vector3Movement;
     Vector2 currentSpeed = Vector2.zero;
     //Jump
+    [Header("---Jump---")]
     public bool isJump = false;
     [SerializeField] private float jumpMoveSpeed;
     Vector3 jumpHeightVector3;
     [SerializeField] Transform groundDetector;
     Vector3 groundDetectorVector3;
     [SerializeField] private float jumpForce;
-    
+
     //Vault
+    [Header("---Vault---")]
+    [SerializeField] private List<NewParkourAction> newParkourActions;
+    private EnvironmentChecker environmentChecker;
     private bool isInAction = false;
     // Start is called before the first frame update
     private void Awake()
@@ -74,13 +79,24 @@ public class PlayerController : MonoBehaviour
     {
         
         Movement();
+
+        //Vault
         if (playerInput.Player.Jump.ReadValue<float>() == 1 && isInAction == false)
         {
             if (environmentChecker.checkData().Yoffset_Ray_Hit_Check == true)
             {
-                StartCoroutine(VaultOverObstacle());
+                foreach (var action in newParkourActions)
+                {
+                    if (action.checkIfAvailable(environmentChecker.checkData(), transform))
+                    {
+                        StartCoroutine(VaultOverObstacle(action));
+                        break;
+                    }
+                }
             }
         }
+
+        //Jump
         if (environmentChecker.checkData().Yoffset_Ray_Hit_Check == false)
         {
 
@@ -156,10 +172,10 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    IEnumerator VaultOverObstacle()
+    IEnumerator VaultOverObstacle(NewParkourAction newParkourAction)
     {
         isInAction = true;
-        animator.CrossFade("Vault Over Obstacle", 0.2f);
+        animator.CrossFade(newParkourAction.AnimationName, 0.2f);
         var animatorState = animator.GetNextAnimatorStateInfo(0);
         yield return new WaitForSeconds(animatorState.length);
         isInAction = false;

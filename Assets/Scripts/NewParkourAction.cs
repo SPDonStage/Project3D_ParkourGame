@@ -11,9 +11,11 @@ public class NewParkourAction : ScriptableObject
     public bool checkIfAvailable(EnvironmentChecker.ObjectData objectData, Transform player)
     {
         float checkHeight = objectData.Downward_Ray_Hit.point.y - player.position.y;
-        if (checkHeight < minHeight || checkHeight > maxHeight) { }
+        if (checkHeight < minHeight || checkHeight > maxHeight) 
             return false;
         
-            return true;
+        return true;
     }
+
+    public string AnimationName => animationName;
 }
