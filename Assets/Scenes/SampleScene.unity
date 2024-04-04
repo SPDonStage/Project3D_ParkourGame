@@ -620,8 +620,8 @@ Transform:
   m_GameObject: {fileID: 528668678}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.6868408, y: -1, z: -3.725}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 2.343, y: -1, z: -3.725}
+  m_LocalScale: {x: 2.58, y: 1, z: 2.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -842,7 +842,7 @@ Transform:
   m_Children:
   - {fileID: 788693394}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0.11, z: 0}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -912,7 +912,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   layerMask:
     serializedVersion: 2
-    m_Bits: 72
+    m_Bits: 8
 --- !u!1 &1680296353
 GameObject:
   m_ObjectHideFlags: 0
@@ -2784,6 +2784,11 @@ PrefabInstance:
       propertyPath: virtualCamera
       value: 
       objectReference: {fileID: 811871208}
+    - target: {fileID: 1614424821143004268, guid: 7618ab51621d6144a8f6fd5852475d3d,
+        type: 3}
+      propertyPath: groundLayer.m_Bits
+      value: 72
+      objectReference: {fileID: 0}
     - target: {fileID: 1614424821143004268, guid: 7618ab51621d6144a8f6fd5852475d3d,
         type: 3}
       propertyPath: curveJump.m_Curve.Array.size

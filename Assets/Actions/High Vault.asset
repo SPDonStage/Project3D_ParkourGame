@@ -10,8 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de1d38b9e9744d240aa9370071364f69, type: 3}
-  m_Name: Low Vault
+  m_Name: High Vault
   m_EditorClassIdentifier: 
-  animationName: Low Vault
-  minHeight: 0.1
-  maxHeight: 0.9
+  animationName: High Vault
+  minHeight: 0.9
+  maxHeight: 2
+  isLookAtObstacle: 1
+  isMatching: 1
+  avatarTarget: 3
+  startTimeMatching: 0.6
+  endTimeMatching: 0.97

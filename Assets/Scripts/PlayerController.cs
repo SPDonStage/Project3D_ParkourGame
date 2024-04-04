@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour
     private CharacterController characterController;
     [SerializeField] private PlayerInput playerInput;
     [SerializeField] private Animator animator;
+    [SerializeField] Camera camera;
     [SerializeField] CinemachineVirtualCamera virtualCamera;
     [Header("---Movement---")]
     //Movement
@@ -53,6 +54,7 @@ public class PlayerController : MonoBehaviour
         characterController = GetComponent<CharacterController>();  
         playerInput = new PlayerInput();
         environmentChecker = GetComponent<EnvironmentChecker>();
+        camera = Camera.main;
     }
     private void OnDisable()
     {
@@ -73,7 +75,10 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.rotation = Quaternion.AngleAxis(virtualCamera.transform.rotation.eulerAngles.y, Vector3.up);
+        if (isInAction == false)
+        {
+            transform.rotation = Quaternion.AngleAxis(camera.transform.rotation.eulerAngles.y, Vector3.up);
+        }
     }
     private void FixedUpdate()
     {
@@ -137,8 +142,11 @@ public class PlayerController : MonoBehaviour
                 }          
             case CharacterState.Jump:
                 {
-                    animator.applyRootMotion = false;
-                    animator.CrossFade("On Air", 0.2f);
+                    if (isInAction == false)
+                    {
+                        animator.applyRootMotion = false;
+                        animator.CrossFade("On Air", 0.2f);
+                    }
                     break;
                 }
         }
@@ -177,8 +185,30 @@ public class PlayerController : MonoBehaviour
         isInAction = true;
         animator.CrossFade(newParkourAction.AnimationName, 0.2f);
         var animatorState = animator.GetNextAnimatorStateInfo(0);
-        yield return new WaitForSeconds(animatorState.length);
+        float timeCounter = 0;
+        while (timeCounter <= animatorState.length)
+        {
+            if (newParkourAction.IsLookAtObstacle == true)
+            {
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, newParkourAction.RotatingToObstacle,150 * Time.fixedDeltaTime);
+                virtualCamera.GetComponent<CinemachineVirtualCamera>().enabled = false;
+                camera.transform.rotation = Quaternion.RotateTowards(camera.transform.rotation, newParkourAction.RotatingToObstacle, 150 * Time.fixedDeltaTime);
+            }
+            if (newParkourAction.IsMatching == true)
+            {
+                TargetMatching(newParkourAction);
+            }
+            timeCounter += Time.fixedDeltaTime;
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
+            virtualCamera.GetComponent<CinemachineVirtualCamera>().enabled = true;
+        }
+        
+        
         isInAction = false;
+    }
+    private void TargetMatching(NewParkourAction action)
+    {
+        animator.MatchTarget(action.MatchPosition, transform.rotation, action.AvatarTarget, new MatchTargetWeightMask(new Vector3(0, 0, 0), 0), action.StartTimeMatching, action.EndTimeMatching);
     }
     private void OnDrawGizmos()
     {
