@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     public enum CharacterState
     {
         Ground,
+        Crouch,
         Jump,
     }
     //Layer
@@ -35,13 +36,13 @@ public class PlayerController : MonoBehaviour
     Vector2 currentSpeed = Vector2.zero;
     //Jump
     [Header("---Jump---")]
-    public bool isJump = false;
     [SerializeField] private float jumpMoveSpeed;
     Vector3 jumpHeightVector3;
     [SerializeField] Transform groundDetector;
     Vector3 groundDetectorVector3;
     [SerializeField] private float jumpForce;
-
+    //Crouch
+    [Header("---Crouch---")]
     //Vault
     [Header("---Vault---")]
     [SerializeField] private List<NewParkourAction> newParkourActions;
@@ -84,7 +85,7 @@ public class PlayerController : MonoBehaviour
     {
         
         Movement();
-
+        Crouch();
         //Vault
         if (playerInput.Player.Jump.ReadValue<float>() == 1 && isInAction == false)
         {
@@ -109,52 +110,51 @@ public class PlayerController : MonoBehaviour
         }
 
     }
-    void Movement()
-    {
-        vector2MovementInput = playerInput.Player.Movement.ReadValue<Vector2>();
-        vector3Movement = new Vector3(vector2MovementInput.x, 0, vector2MovementInput.y);
-        if (vector3Movement.sqrMagnitude < 0)
-        {
-
-        }
-        else
-        {
-            currentSpeed.x = Mathf.Lerp(currentSpeed.x, vector3Movement.x, speed * Time.fixedDeltaTime);
-            currentSpeed.y = Mathf.Lerp(currentSpeed.y, vector3Movement.z, speed * Time.fixedDeltaTime);
-            animator.SetBool("Sprint", playerInput.Player.Sprint.ReadValue<float>() == 1 ? true : false);
-        }
-   
-        animator.SetFloat("Movement.x", currentSpeed.x);
-        animator.SetFloat("Movement.y", currentSpeed.y);
-       
-
-    }
-    
     private void SwitchCharacterStateAnimation(CharacterState state)
     {
-        switch(state)
+        switch (state)
         {
             case CharacterState.Ground:
                 {
+                    characterController.center = new Vector3(0, 1.8f, 0);
+                    characterController.height = 3.7f;
                     animator.applyRootMotion = true;
-
                     break;
-                }          
+                }
+            case CharacterState.Crouch:
+                {
+                    characterController.center = new Vector3(0, 1.1f, 0);
+                    characterController.height = 2.2f;
+                    break;
+                }
             case CharacterState.Jump:
                 {
                     if (isInAction == false)
                     {
                         animator.applyRootMotion = false;
                         animator.CrossFade("On Air", 0.2f);
+                        characterController.center = new Vector3(0, 1.1f, 0);
+                        characterController.height = 2.2f;
                     }
                     break;
                 }
         }
     }
+    void Movement()
+    {
+        vector2MovementInput = playerInput.Player.Movement.ReadValue<Vector2>();
+        vector3Movement = new Vector3(vector2MovementInput.x, 0, vector2MovementInput.y);
+        if (vector3Movement.sqrMagnitude >= 0)
+        {
+            currentSpeed.x = Mathf.Lerp(currentSpeed.x, vector3Movement.x, speed * Time.fixedDeltaTime);
+            currentSpeed.y = Mathf.Lerp(currentSpeed.y, vector3Movement.z, speed * Time.fixedDeltaTime);
+            animator.SetBool("Sprint", playerInput.Player.Sprint.ReadValue<float>() == 1 ? true : false);
+        }
+        animator.SetFloat("Movement.x", currentSpeed.x);
+        animator.SetFloat("Movement.y", currentSpeed.y);
+    }  
     void Jump()
     {
-
-    
         groundDetectorVector3 = new Vector3(groundDetector.position.x, groundDetector.position.y, groundDetector.position.z);
         Physics.Raycast(groundDetectorVector3, Vector3.down, out var checkGround, 0.1f, groundLayer);
         if (checkGround.collider != null)
@@ -165,7 +165,6 @@ public class PlayerController : MonoBehaviour
             jumpHeightVector3.z = Mathf.Lerp(jumpHeightVector3.z, 0, speed * Time.fixedDeltaTime);
             jumpHeightVector3.y = playerInput.Player.Jump.ReadValue<float>() == 1
                             ? jumpForce : Physics.gravity.y;
-
         }
         else
         {                    
@@ -174,12 +173,22 @@ public class PlayerController : MonoBehaviour
             jumpHeightVector3.z = Mathf.Clamp(jumpHeightVector3.z, -5.5f, 5.5f);
             jumpHeightVector3 += vector3Movement * jumpMoveSpeed * Time.fixedDeltaTime;  
         }
-
         jumpHeightVector3 += Physics.gravity * Time.fixedDeltaTime;
         characterController.Move(transform.TransformDirection(jumpHeightVector3) * Time.fixedDeltaTime);
-
     }
-
+    void Crouch()
+    {
+        if (playerInput.Player.Crouch.ReadValue<float>() == 1)
+        {
+            SwitchCharacterStateAnimation(state = CharacterState.Crouch);
+            animator.SetBool("isCrouching", true);  
+        }
+        else
+        {
+            SwitchCharacterStateAnimation(state = CharacterState.Ground);
+            animator.SetBool("isCrouching", false);
+        }
+    }
     IEnumerator VaultOverObstacle(NewParkourAction newParkourAction)
     {
         isInAction = true;
@@ -202,18 +211,11 @@ public class PlayerController : MonoBehaviour
             yield return new WaitForSeconds(Time.fixedDeltaTime);
             virtualCamera.GetComponent<CinemachineVirtualCamera>().enabled = true;
         }
-        
-        
         isInAction = false;
     }
     private void TargetMatching(NewParkourAction action)
     {
         animator.MatchTarget(action.MatchPosition, transform.rotation, action.AvatarTarget, new MatchTargetWeightMask(new Vector3(0, 0, 0), 0), action.StartTimeMatching, action.EndTimeMatching);
-    }
-    private void OnDrawGizmos()
-    {
-   
- 
     }
     //private void OnAnimatorMove()
     //{
