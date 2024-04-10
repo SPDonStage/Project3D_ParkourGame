@@ -120,8 +120,8 @@ public class PlayerController : MonoBehaviour
         {
             case CharacterState.Ground:
                 {
-                    characterController.center = new Vector3(0, 1.83f, 0);
-                    characterController.height = 3.65f;
+                    characterController.center = new Vector3(0, 1.85f, 0);
+                    characterController.height = 3.6f;
                     animator.applyRootMotion = true;
                     break;
                 }
@@ -212,13 +212,9 @@ public class PlayerController : MonoBehaviour
         {
             if (newParkourAction.IsLookAtObstacle == true)
             {
-               // virtualCamera.GetComponent<CinemachineVirtualCamera>().enabled = false;
-               // virtualCamera.GetComponent<CinemachineInputProvider>().enabled = false;
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, newParkourAction.RotatingToObstacle,150 * Time.fixedDeltaTime);
-                Debug.Log(Quaternion.AngleAxis(newParkourAction.RotatingToObstacle.y, Vector3.up));
-                virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.Value = Mathf.Lerp(virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.Value
-                                                                                , Quaternion.AngleAxis(newParkourAction.RotatingToObstacle.y, Vector3.up).y, 150 * Time.fixedDeltaTime);
-                
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, newParkourAction.RotatingToObstacle,150 * Time.fixedDeltaTime);          
+                virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.Value = Quaternion.RotateTowards(cameraPosition.rotation, newParkourAction.RotatingToObstacle, 150 * Time.fixedDeltaTime).eulerAngles.y;
+                virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.Value = Mathf.Lerp(virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.Value, 0, 5 * Time.fixedDeltaTime); ;
             }
             if (newParkourAction.IsMatching == true)
             {

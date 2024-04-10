@@ -10,7 +10,7 @@ public class NewParkourAction : ScriptableObject
     [SerializeField] float maxHeight;
     [SerializeField] bool isLookAtObstacle = true; //optional
     private Quaternion rotatingToObstacle;
-
+    public float checkHeight;
     [Header("---Target Matching---")]
     [SerializeField] bool isMatching = true; //optional
     Vector3 matchPosition = Vector3.zero;
@@ -18,8 +18,8 @@ public class NewParkourAction : ScriptableObject
     [SerializeField] float startTimeMatching;
     [SerializeField] float endTimeMatching;
     public bool checkIfAvailable(EnvironmentChecker.ObjectData objectData, Transform player)
-    {
-        float checkHeight = objectData.Downward_Ray_Hit.point.y - player.position.y;
+    {  
+        checkHeight = objectData.Downward_Ray_Hit.point.y + player.position.y < 0 ? player.position.y : - player.position.y ;
         if (checkHeight < minHeight || checkHeight > maxHeight) 
             return false;
         if (isLookAtObstacle == true)

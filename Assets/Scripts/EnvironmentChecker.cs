@@ -9,17 +9,18 @@ using UnityEngine.Experimental.AI;
 public class EnvironmentChecker : MonoBehaviour
 {
     private CharacterController characterController;
-    private Vector3 Yoffset_Ray = new Vector3(0, 0.1f, 0);
+    private Vector3 Yoffset_Ray = Vector3.zero;
     private float Yoffset_Ray_Length = 2f;
     [SerializeField] private LayerMask layerMask;
     private Vector3 originPos;
     private Vector3 originPosDownward;
     private ObjectData objectData;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         GetComponent<PlayerController>().enabled = true;
         characterController = GetComponent<CharacterController>();
+       
     }
 
     // Update is called once per frame
@@ -30,19 +31,45 @@ public class EnvironmentChecker : MonoBehaviour
     public ObjectData checkData()
     {
         objectData = new ObjectData();
-        originPos = transform.position + Yoffset_Ray;
+        originPos = transform.position;
         objectData.Yoffset_Ray_Hit_Check = Physics.Raycast(originPos, transform.forward, out objectData.Yoffset_Ray_Hit,
                         Yoffset_Ray_Length, layerMask);
         if (objectData.Yoffset_Ray_Hit.collider != null)
         {
-            originPosDownward = objectData.Yoffset_Ray_Hit.point + new Vector3(0, characterController.height + .5f, 0);
+            originPosDownward = objectData.Yoffset_Ray_Hit.point + (transform.forward * 0.05f) + new Vector3(0, characterController.height + .5f, 0);
             objectData.Downward_Ray_Hit_Check = Physics.Raycast(originPosDownward, Vector3.down, out objectData.Downward_Ray_Hit, characterController.height + .5f, layerMask);
-
-            Debug.DrawRay(originPosDownward, -transform.up * (characterController.height + .5f), objectData.Downward_Ray_Hit.collider != null ? Color.red : Color.green);
-        }
-        Debug.DrawRay(originPos, transform.forward * Yoffset_Ray_Length, objectData.Yoffset_Ray_Hit.collider != null ? Color.red : Color.green);
-        Debug.DrawRay(originPos, objectData.Yoffset_Ray_Hit.point, Color.yellow);
+        }    
         return objectData;
+    }
+    public void OnDrawGizmos()
+    {
+        objectData = new ObjectData();
+        originPos = transform.position;
+        objectData.Yoffset_Ray_Hit_Check = Physics.Raycast(originPos, transform.forward, out objectData.Yoffset_Ray_Hit,
+                        Yoffset_Ray_Length, layerMask);
+        if (objectData.Yoffset_Ray_Hit.collider != null)
+        {
+            originPosDownward = objectData.Yoffset_Ray_Hit.point + (transform.forward * 0.05f) + new Vector3(0, characterController.height + .5f, 0);
+            objectData.Downward_Ray_Hit_Check = Physics.Raycast(originPosDownward, Vector3.down, out objectData.Downward_Ray_Hit, characterController.height + .5f, layerMask);
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(transform.position, objectData.Yoffset_Ray_Hit.point);
+            if (objectData.Downward_Ray_Hit.collider != null)
+            {
+                Gizmos.color = Color.green;
+                Gizmos.DrawLine(originPosDownward, objectData.Downward_Ray_Hit.point);
+            }
+            else
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawRay(originPosDownward, -transform.up);
+            }
+        }
+        else
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawRay(originPos, transform.forward);
+        }
+        
     }
     public struct ObjectData
     {
