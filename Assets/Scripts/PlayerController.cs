@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
         Ground,
         Crouch,
         Jump,
+        Vault,
     }
     //Layer
     [SerializeField] private LayerMask groundLayer;
@@ -29,6 +30,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] Camera camera;
     [SerializeField] CinemachineVirtualCamera virtualCamera;
+    [SerializeField] Transform cameraPosition;
     [Header("---Movement---")]
     //Movement
     Vector2 vector2MovementInput;
@@ -39,7 +41,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float jumpMoveSpeed;
     Vector3 jumpHeightVector3;
     [SerializeField] Transform groundDetector;
-    Vector3 groundDetectorVector3;
+    [SerializeField] Vector3 groundDetectorVector3;
     [SerializeField] private float jumpForce;
     //Crouch
     [Header("---Crouch---")]
@@ -87,28 +89,30 @@ public class PlayerController : MonoBehaviour
         Movement();
         Crouch();
         //Vault
-        if (playerInput.Player.Jump.ReadValue<float>() == 1 && isInAction == false)
+        if (isInAction == false)
         {
             if (environmentChecker.checkData().Yoffset_Ray_Hit_Check == true)
             {
-                foreach (var action in newParkourActions)
+                if (playerInput.Player.Jump.ReadValue<float>() == 1)
                 {
-                    if (action.checkIfAvailable(environmentChecker.checkData(), transform))
+
+                    foreach (var action in newParkourActions)
                     {
-                        StartCoroutine(VaultOverObstacle(action));
-                        break;
+                        if (action.checkIfAvailable(environmentChecker.checkData(), transform))
+                        {
+                            StartCoroutine(VaultOverObstacle(action));
+                            break;
+                        }
                     }
                 }
             }
+            if (state != CharacterState.Vault)
+                Jump();
+            
         }
-
-        //Jump
-        if (environmentChecker.checkData().Yoffset_Ray_Hit_Check == false)
-        {
-
-            Jump();
-        }
-
+    
+      
+        
     }
     private void SwitchCharacterStateAnimation(CharacterState state)
     {
@@ -116,8 +120,8 @@ public class PlayerController : MonoBehaviour
         {
             case CharacterState.Ground:
                 {
-                    characterController.center = new Vector3(0, 1.8f, 0);
-                    characterController.height = 3.7f;
+                    characterController.center = new Vector3(0, 1.83f, 0);
+                    characterController.height = 3.65f;
                     animator.applyRootMotion = true;
                     break;
                 }
@@ -131,11 +135,15 @@ public class PlayerController : MonoBehaviour
                 {
                     if (isInAction == false)
                     {
-                        animator.applyRootMotion = false;
                         animator.CrossFade("On Air", 0.2f);
                         characterController.center = new Vector3(0, 1.1f, 0);
                         characterController.height = 2.2f;
                     }
+                    break;
+                }
+            case CharacterState.Vault:
+                {
+                    isInAction = true;
                     break;
                 }
         }
@@ -159,23 +167,28 @@ public class PlayerController : MonoBehaviour
         Physics.Raycast(groundDetectorVector3, Vector3.down, out var checkGround, 0.1f, groundLayer);
         if (checkGround.collider != null)
         {
-            SwitchCharacterStateAnimation(state = CharacterState.Ground);
-            animator.SetBool("Jump", false);
-            jumpHeightVector3.x = Mathf.Lerp(jumpHeightVector3.x, 0, speed * Time.fixedDeltaTime); 
-            jumpHeightVector3.z = Mathf.Lerp(jumpHeightVector3.z, 0, speed * Time.fixedDeltaTime);
-            jumpHeightVector3.y = playerInput.Player.Jump.ReadValue<float>() == 1
-                            ? jumpForce : Physics.gravity.y;
+            if (state != CharacterState.Crouch)
+            {
+                SwitchCharacterStateAnimation(state = CharacterState.Ground);
+                animator.SetBool("Jump", false);
+                jumpHeightVector3.x = Mathf.Lerp(jumpHeightVector3.x, 0, speed * Time.fixedDeltaTime);
+                jumpHeightVector3.z = Mathf.Lerp(jumpHeightVector3.z, 0, speed * Time.fixedDeltaTime);
+                jumpHeightVector3.y = playerInput.Player.Jump.ReadValue<float>() == 1
+                                ? jumpForce : Physics.gravity.y;
+            }
         }
         else
-        {                    
+        {
             SwitchCharacterStateAnimation(state = CharacterState.Jump);
             jumpHeightVector3.x = Mathf.Clamp(jumpHeightVector3.x, -5.5f, 5.5f);
             jumpHeightVector3.z = Mathf.Clamp(jumpHeightVector3.z, -5.5f, 5.5f);
             jumpHeightVector3 += vector3Movement * jumpMoveSpeed * Time.fixedDeltaTime;  
         }
+        
         jumpHeightVector3 += Physics.gravity * Time.fixedDeltaTime;
         characterController.Move(transform.TransformDirection(jumpHeightVector3) * Time.fixedDeltaTime);
     }
+   
     void Crouch()
     {
         if (playerInput.Player.Crouch.ReadValue<float>() == 1)
@@ -191,7 +204,7 @@ public class PlayerController : MonoBehaviour
     }
     IEnumerator VaultOverObstacle(NewParkourAction newParkourAction)
     {
-        isInAction = true;
+        SwitchCharacterStateAnimation(state = CharacterState.Vault);
         animator.CrossFade(newParkourAction.AnimationName, 0.2f);
         var animatorState = animator.GetNextAnimatorStateInfo(0);
         float timeCounter = 0;
@@ -199,9 +212,13 @@ public class PlayerController : MonoBehaviour
         {
             if (newParkourAction.IsLookAtObstacle == true)
             {
+               // virtualCamera.GetComponent<CinemachineVirtualCamera>().enabled = false;
+               // virtualCamera.GetComponent<CinemachineInputProvider>().enabled = false;
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, newParkourAction.RotatingToObstacle,150 * Time.fixedDeltaTime);
-                virtualCamera.GetComponent<CinemachineVirtualCamera>().enabled = false;
-                camera.transform.rotation = Quaternion.RotateTowards(camera.transform.rotation, newParkourAction.RotatingToObstacle, 150 * Time.fixedDeltaTime);
+                Debug.Log(Quaternion.AngleAxis(newParkourAction.RotatingToObstacle.y, Vector3.up));
+                virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.Value = Mathf.Lerp(virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.Value
+                                                                                , Quaternion.AngleAxis(newParkourAction.RotatingToObstacle.y, Vector3.up).y, 150 * Time.fixedDeltaTime);
+                
             }
             if (newParkourAction.IsMatching == true)
             {
@@ -209,7 +226,7 @@ public class PlayerController : MonoBehaviour
             }
             timeCounter += Time.fixedDeltaTime;
             yield return new WaitForSeconds(Time.fixedDeltaTime);
-            virtualCamera.GetComponent<CinemachineVirtualCamera>().enabled = true;
+        //    virtualCamera.GetComponent<CinemachineVirtualCamera>().enabled = true;
         }
         isInAction = false;
     }
