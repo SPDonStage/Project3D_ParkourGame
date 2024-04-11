@@ -18,10 +18,13 @@ public class NewParkourAction : ScriptableObject
     [SerializeField] float startTimeMatching;
     [SerializeField] float endTimeMatching;
     public bool checkIfAvailable(EnvironmentChecker.ObjectData objectData, Transform player)
-    {  
-        checkHeight = objectData.Downward_Ray_Hit.point.y + player.position.y < 0 ? player.position.y : - player.position.y ;
-        if (checkHeight < minHeight || checkHeight > maxHeight) 
+    {
+        checkHeight = objectData.Downward_Ray_Hit.point.y + player.position.y < 0 ? -player.position.y : + player.position.y ;
+        if (objectData.Downward_Ray_Hit.point.y == 0) 
             return false;
+        if (checkHeight < minHeight || checkHeight > maxHeight)
+            return false;
+
         if (isLookAtObstacle == true)
         {
             rotatingToObstacle = Quaternion.LookRotation(-objectData.Yoffset_Ray_Hit.normal);

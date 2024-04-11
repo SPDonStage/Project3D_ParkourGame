@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 1b8d4400fa7fa104fb4674f98b535dac
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 126043
+  packageName: Evil Spirit Katana - Cinematic Sword
+  packageVersion: 1.0
+  assetPath: Assets/Evil Spirit Katana/Resources/LightFlickering.cs
+  uploadId: 261431
