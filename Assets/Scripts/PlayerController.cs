@@ -164,7 +164,7 @@ public class PlayerController : MonoBehaviour
     void Jump()
     {
         groundDetectorVector3 = new Vector3(groundDetector.position.x, groundDetector.position.y, groundDetector.position.z);
-        Physics.Raycast(groundDetectorVector3, Vector3.down, out var checkGround, 0.1f, groundLayer);
+        Physics.Raycast(groundDetectorVector3, Vector3.down, out var checkGround, 0.3f, groundLayer);
         if (checkGround.collider != null)
         {
             if (state != CharacterState.Crouch)
