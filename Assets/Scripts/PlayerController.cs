@@ -115,6 +115,7 @@ public class PlayerController : MonoBehaviour
     {
         Physics.Raycast(transform.position, Vector3.down, out RaycastHit test, 5);Debug.Log(test.point); Debug.Log(test.normal) ;
         float angle = Vector3.Angle(test.normal, Vector3.up);Debug.Log(angle);
+        SetSlopeSlideVelocity(); Debug.Log("slope:"+slopeSlideVelocity);
         Gizmos.color = Color.black;
         Gizmos.DrawLine(transform.position,Vector3.up);
         Gizmos.color = Color.red;
