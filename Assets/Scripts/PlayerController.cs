@@ -113,9 +113,12 @@ public class PlayerController : MonoBehaviour
     }
     private void OnDrawGizmos()
     {
-        Physics.Raycast(transform.position, Vector3.down, out RaycastHit test, 5);Debug.Log(test.point); Debug.Log(test.normal) ;
-        float angle = Vector3.Angle(test.normal, Vector3.up);Debug.Log(angle);
-        SetSlopeSlideVelocity(); Debug.Log("slope:"+slopeSlideVelocity);
+        Physics.Raycast(transform.position, Vector3.down, out RaycastHit test, 5);
+        float angle = Vector3.Angle(test.normal, Vector3.up);
+        Physics.Raycast(transform.position, Vector3.down, out RaycastHit slopeSlideRay_Hit, 5);
+        //SetSlopeSlideVelocity(); 
+        // Debug.Log("slope:"+ Vector3.ProjectOnPlane(Vector3.down, slopeSlideRay_Hit.normal));
+        Debug.Log(Vector3.Dot(slopeSlideRay_Hit.normal, transform.forward));
         Gizmos.color = Color.black;
         Gizmos.DrawLine(transform.position,Vector3.up);
         Gizmos.color = Color.red;
