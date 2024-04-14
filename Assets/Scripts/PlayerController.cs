@@ -99,7 +99,7 @@ public class PlayerController : MonoBehaviour
                     foreach (var action in newParkourActions)
                     {
                         if (action.checkIfAvailable(environmentChecker.checkData(), transform))
-                        {
+                        { 
                             StartCoroutine(VaultOverObstacle(action));
                             break;
                         }
@@ -113,6 +113,18 @@ public class PlayerController : MonoBehaviour
     
       
         
+    }
+    private void OnDrawGizmos()
+    {
+        Physics.Raycast(transform.position, Vector3.down, out RaycastHit test, 5);Debug.Log(test.point); Debug.Log(test.normal) ;
+        float angle = Vector3.Angle(test.normal, Vector3.up);Debug.Log(angle);
+        Gizmos.color = Color.black;
+        Gizmos.DrawLine(transform.position,Vector3.up);
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(transform.position, test.normal);
+        //   Gizmos.DrawRay(transform.position, test.normal);
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawRay(transform.position + Vector3.up, Vector3.down);
     }
     private void SwitchCharacterStateAnimation(CharacterState state)
     {
