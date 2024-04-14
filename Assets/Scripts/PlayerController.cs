@@ -43,6 +43,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Transform groundDetector;
     [SerializeField] Vector3 groundDetectorVector3;
     [SerializeField] private float jumpForce;
+    private Vector3 slopeSlideVelocity = Vector3.zero;
     //Crouch
     [Header("---Crouch---")]
     //Vault
@@ -84,8 +85,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     private void FixedUpdate()
-    {
-        
+    {        
         Movement();
         Crouch();
         //Vault
@@ -96,9 +96,9 @@ public class PlayerController : MonoBehaviour
                 if (playerInput.Player.Jump.ReadValue<float>() == 1)
                 {
 
-                    foreach (var action in newParkourActions)
+                    foreach (var action in newParkourActions) 
                     {
-                        if (action.checkIfAvailable(environmentChecker.checkData(), transform))
+                        if (action.checkIfAvailable(environmentChecker.checkData(), transform)) //check which action available
                         { 
                             StartCoroutine(VaultOverObstacle(action));
                             break;
@@ -110,9 +110,6 @@ public class PlayerController : MonoBehaviour
                 Jump();
             
         }
-    
-      
-        
     }
     private void OnDrawGizmos()
     {
@@ -185,7 +182,7 @@ public class PlayerController : MonoBehaviour
                 animator.SetBool("Jump", false);
                 jumpHeightVector3.x = Mathf.Lerp(jumpHeightVector3.x, 0, speed * Time.fixedDeltaTime);
                 jumpHeightVector3.z = Mathf.Lerp(jumpHeightVector3.z, 0, speed * Time.fixedDeltaTime);
-                jumpHeightVector3.y = playerInput.Player.Jump.ReadValue<float>() == 1
+                jumpHeightVector3.y = playerInput.Player.Jump.ReadValue<float>() == 1 //set jumpforce
                                 ? jumpForce : Physics.gravity.y;
             }
         }
@@ -194,7 +191,7 @@ public class PlayerController : MonoBehaviour
             SwitchCharacterStateAnimation(state = CharacterState.Jump);
             jumpHeightVector3.x = Mathf.Clamp(jumpHeightVector3.x, -5.5f, 5.5f);
             jumpHeightVector3.z = Mathf.Clamp(jumpHeightVector3.z, -5.5f, 5.5f);
-            jumpHeightVector3 += vector3Movement * jumpMoveSpeed * Time.fixedDeltaTime;  
+            jumpHeightVector3 += vector3Movement * jumpMoveSpeed * Time.fixedDeltaTime;   //movement on air;
         }
         
         jumpHeightVector3 += Physics.gravity * Time.fixedDeltaTime;
@@ -224,9 +221,11 @@ public class PlayerController : MonoBehaviour
         {
             if (newParkourAction.IsLookAtObstacle == true)
             {
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, newParkourAction.RotatingToObstacle,150 * Time.fixedDeltaTime);          
-                virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.Value = Quaternion.RotateTowards(cameraPosition.rotation, newParkourAction.RotatingToObstacle, 150 * Time.fixedDeltaTime).eulerAngles.y;
-                virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.Value = Mathf.Lerp(virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.Value, 0, 5 * Time.fixedDeltaTime); ;
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, newParkourAction.RotatingToObstacle,150 * Time.fixedDeltaTime);   //player rotation
+                virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.Value = Quaternion.RotateTowards   //horizontal rotation
+                    (cameraPosition.rotation, newParkourAction.RotatingToObstacle, 150 * Time.fixedDeltaTime).eulerAngles.y;
+                virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.Value = Mathf.Lerp
+                    (virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.Value, 0, 5 * Time.fixedDeltaTime); ; //vertical rotation
             }
             if (newParkourAction.IsMatching == true)
             {
@@ -241,6 +240,20 @@ public class PlayerController : MonoBehaviour
     private void TargetMatching(NewParkourAction action)
     {
         animator.MatchTarget(action.MatchPosition, transform.rotation, action.AvatarTarget, new MatchTargetWeightMask(new Vector3(0, 0, 0), 0), action.StartTimeMatching, action.EndTimeMatching);
+    }
+    private void SetSlopeSlideVelocity()
+    {
+        float angle = 0;
+        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit slopeSlideRay_Hit, 5)) 
+        { 
+            angle = Vector3.Angle(slopeSlideRay_Hit.normal, Vector3.up); 
+            if (angle >= characterController.slopeLimit)
+            {
+                slopeSlideVelocity = Vector3.ProjectOnPlane(Vector3.down, slopeSlideRay_Hit.normal);
+                return;
+            } 
+        }
+        slopeSlideVelocity = Vector3.zero;
     }
     //private void OnAnimatorMove()
     //{
