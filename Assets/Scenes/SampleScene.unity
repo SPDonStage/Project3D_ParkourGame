@@ -226,7 +226,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.53729963, y: 0, z: 0, w: 0.8433915}
   m_LocalPosition: {x: 4.53, y: 1, z: 11.63}
-  m_LocalScale: {x: 4, y: 20, z: 1}
+  m_LocalScale: {x: 10, y: 40, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -3497,6 +3497,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1614424821143004268, guid: 7618ab51621d6144a8f6fd5852475d3d,
         type: 3}
+      propertyPath: speedMouse
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 1614424821143004268, guid: 7618ab51621d6144a8f6fd5852475d3d,
+        type: 3}
       propertyPath: jumpMoveSpeed
       value: 3
       objectReference: {fileID: 0}
@@ -3510,6 +3515,11 @@ PrefabInstance:
       propertyPath: cameraPosition
       value: 
       objectReference: {fileID: 70681525}
+    - target: {fileID: 1614424821143004268, guid: 7618ab51621d6144a8f6fd5852475d3d,
+        type: 3}
+      propertyPath: slopeSlideSpeed
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 1614424821143004268, guid: 7618ab51621d6144a8f6fd5852475d3d,
         type: 3}
       propertyPath: groundLayer.m_Bits

@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
         Crouch,
         Jump,
         Vault,
+        Slide,
     }
     //Layer
     [SerializeField] private LayerMask groundLayer;
@@ -25,6 +26,7 @@ public class PlayerController : MonoBehaviour
     [Header("---Player Setting---")]
     [SerializeField] private CharacterState state;
     [SerializeField] private float speed;
+    [SerializeField] private float speedMouse;
     private CharacterController characterController;
     [SerializeField] private PlayerInput playerInput;
     [SerializeField] private Animator animator;
@@ -46,6 +48,9 @@ public class PlayerController : MonoBehaviour
     private Vector3 slopeSlideVelocity = Vector3.zero;
     //Crouch
     [Header("---Crouch---")]
+    private float slopeSlidingDirectionAngle = 0;
+    [SerializeField] private float slopeSlideSpeed = 0;
+    private bool isSlopeSliding = false;
     //Vault
     [Header("---Vault---")]
     [SerializeField] private List<NewParkourAction> newParkourActions;
@@ -80,14 +85,16 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         if (isInAction == false)
-        {
-            transform.rotation = Quaternion.AngleAxis(camera.transform.rotation.eulerAngles.y, Vector3.up);
+        {            
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.AngleAxis(camera.transform.rotation.eulerAngles.y, Vector3.up), speedMouse * Time.fixedDeltaTime);
         }
     }
     private void FixedUpdate()
     {        
         Movement();
         Crouch();
+        Slide();
+        SlopeSlide();
         //Vault
         if (isInAction == false)
         {
@@ -107,18 +114,17 @@ public class PlayerController : MonoBehaviour
                 }
             }
             if (state != CharacterState.Vault)
-                Jump();
-            
+                Jump();           
         }
     }
     private void OnDrawGizmos()
     {
         Physics.Raycast(transform.position, Vector3.down, out RaycastHit test, 5);
         float angle = Vector3.Angle(test.normal, Vector3.up);
-        Physics.Raycast(transform.position, Vector3.down, out RaycastHit slopeSlideRay_Hit, 5);
+        
         //SetSlopeSlideVelocity(); 
         // Debug.Log("slope:"+ Vector3.ProjectOnPlane(Vector3.down, slopeSlideRay_Hit.normal));
-        Debug.Log(Vector3.Dot(slopeSlideRay_Hit.normal, transform.forward));
+     //   Debug.Log(Vector3.Dot(slopeSlideRay_Hit.normal, transform.forward));
         Gizmos.color = Color.black;
         Gizmos.DrawLine(transform.position,Vector3.up);
         Gizmos.color = Color.red;
@@ -159,6 +165,19 @@ public class PlayerController : MonoBehaviour
                     isInAction = true;
                     break;
                 }
+            case CharacterState.Slide:
+                {
+                    if (isSlopeSliding)
+                    {
+                     //   animator.applyRootMotion = false;
+                        animator.CrossFade("Running Slide Loop", 0.2f);
+                    }
+                    else
+                    {
+                        animator.applyRootMotion = true;
+                    }
+                    break;
+                }
         }
     }
     void Movement()
@@ -178,17 +197,17 @@ public class PlayerController : MonoBehaviour
     {
         groundDetectorVector3 = new Vector3(groundDetector.position.x, groundDetector.position.y, groundDetector.position.z);
         Physics.Raycast(groundDetectorVector3, Vector3.down, out var checkGround, 0.3f, groundLayer);
-        if (checkGround.collider != null)
+        if (checkGround.collider)
         {
-            if (state != CharacterState.Crouch)
+            if (playerInput.Player.Crouch.ReadValue<float>() == 0)
             {
                 SwitchCharacterStateAnimation(state = CharacterState.Ground);
-                animator.SetBool("Jump", false);
+                animator.SetBool("Jump", false);    
                 jumpHeightVector3.x = Mathf.Lerp(jumpHeightVector3.x, 0, speed * Time.fixedDeltaTime);
                 jumpHeightVector3.z = Mathf.Lerp(jumpHeightVector3.z, 0, speed * Time.fixedDeltaTime);
                 jumpHeightVector3.y = playerInput.Player.Jump.ReadValue<float>() == 1 //set jumpforce
                                 ? jumpForce : Physics.gravity.y;
-            }
+            }           
         }
         else
         {
@@ -196,12 +215,10 @@ public class PlayerController : MonoBehaviour
             jumpHeightVector3.x = Mathf.Clamp(jumpHeightVector3.x, -5.5f, 5.5f);
             jumpHeightVector3.z = Mathf.Clamp(jumpHeightVector3.z, -5.5f, 5.5f);
             jumpHeightVector3 += vector3Movement * jumpMoveSpeed * Time.fixedDeltaTime;   //movement on air;
-        }
-        
+        }        
         jumpHeightVector3 += Physics.gravity * Time.fixedDeltaTime;
         characterController.Move(transform.TransformDirection(jumpHeightVector3) * Time.fixedDeltaTime);
-    }
-   
+    }   
     void Crouch()
     {
         if (playerInput.Player.Crouch.ReadValue<float>() == 1)
@@ -211,8 +228,42 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            SwitchCharacterStateAnimation(state = CharacterState.Ground);
             animator.SetBool("isCrouching", false);
+        }     
+    }
+    void Slide()
+    {
+        if (playerInput.Player.Crouch.ReadValue<float>() == 1 && playerInput.Player.Sprint.ReadValue<float>() == 1 && vector3Movement.z > 0)
+        {
+            SwitchCharacterStateAnimation(state = CharacterState.Slide);
+            animator.SetBool("isSliding", true);
+        }
+        else
+        {
+            animator.SetBool("isSliding", false);
+        }
+    }
+    void SlopeSlide() //use character controller movement for slope sliding
+    {
+        Physics.Raycast(transform.position, Vector3.down, out RaycastHit slopeSlideRay_Hit, 1);
+        slopeSlidingDirectionAngle = Vector3.Dot(slopeSlideRay_Hit.normal, transform.forward);
+        if ((slopeSlidingDirectionAngle >= 0.0001f || slopeSlidingDirectionAngle <= -0.0001f) && state == CharacterState.Slide) //0.0001 to avoid very small/Epsilon value
+        {
+            isSlopeSliding = true;
+            if (slopeSlidingDirectionAngle < 0) //Upward Direction
+            {
+
+                characterController.Move(transform.TransformDirection(vector3Movement) * 0); //stay sliding
+            }
+            else //Downward Direction
+            {
+                characterController.Move(transform.TransformDirection(vector3Movement) * slopeSlideSpeed * Time.fixedDeltaTime);
+            }
+        }
+        else
+        {
+            Debug.Log("sas");
+            isSlopeSliding = false;
         }
     }
     IEnumerator VaultOverObstacle(NewParkourAction newParkourAction)
@@ -223,7 +274,7 @@ public class PlayerController : MonoBehaviour
         float timeCounter = 0;
         while (timeCounter <= animatorState.length)
         {
-            if (newParkourAction.IsLookAtObstacle == true)
+            if (newParkourAction.IsLookAtObstacle)
             {
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, newParkourAction.RotatingToObstacle,150 * Time.fixedDeltaTime);   //player rotation
                 virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.Value = Quaternion.RotateTowards   //horizontal rotation
@@ -231,7 +282,7 @@ public class PlayerController : MonoBehaviour
                 virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.Value = Mathf.Lerp
                     (virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.Value, 0, 5 * Time.fixedDeltaTime); ; //vertical rotation
             }
-            if (newParkourAction.IsMatching == true)
+            if (newParkourAction.IsMatching)
             {
                 TargetMatching(newParkourAction);
             }
@@ -239,6 +290,7 @@ public class PlayerController : MonoBehaviour
             yield return new WaitForSeconds(Time.fixedDeltaTime);
         //    virtualCamera.GetComponent<CinemachineVirtualCamera>().enabled = true;
         }
+        SwitchCharacterStateAnimation(state = CharacterState.Ground);
         isInAction = false;
     }
     private void TargetMatching(NewParkourAction action)

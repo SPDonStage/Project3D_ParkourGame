@@ -34,7 +34,7 @@ public class EnvironmentChecker : MonoBehaviour
         originPos = transform.position;
         objectData.Yoffset_Ray_Hit_Check = Physics.Raycast(originPos, transform.forward, out objectData.Yoffset_Ray_Hit,
                         Yoffset_Ray_Length, layerMask);
-        if (objectData.Yoffset_Ray_Hit.collider != null)
+        if (objectData.Yoffset_Ray_Hit.collider)
         {
             originPosDownward = objectData.Yoffset_Ray_Hit.point + (transform.forward * 0.05f) + new Vector3(0, characterController.height + .5f, 0);
             objectData.Downward_Ray_Hit_Check = Physics.Raycast(originPosDownward, Vector3.down, out objectData.Downward_Ray_Hit, characterController.height + .5f, layerMask);
@@ -47,13 +47,13 @@ public class EnvironmentChecker : MonoBehaviour
         originPos = transform.position;
         objectData.Yoffset_Ray_Hit_Check = Physics.Raycast(originPos, transform.forward, out objectData.Yoffset_Ray_Hit,
                         Yoffset_Ray_Length, layerMask);
-        if (objectData.Yoffset_Ray_Hit.collider != null)
+        if (objectData.Yoffset_Ray_Hit.collider)
         {
             originPosDownward = objectData.Yoffset_Ray_Hit.point + (transform.forward * 0.05f) + new Vector3(0, characterController.height + .5f, 0);
             objectData.Downward_Ray_Hit_Check = Physics.Raycast(originPosDownward, Vector3.down, out objectData.Downward_Ray_Hit, characterController.height + .5f, layerMask);
             Gizmos.color = Color.blue;
             Gizmos.DrawLine(transform.position, objectData.Yoffset_Ray_Hit.point);
-            if (objectData.Downward_Ray_Hit.collider != null)
+            if (objectData.Downward_Ray_Hit.collider)
             {
                 Gizmos.color = Color.green;
                 Gizmos.DrawLine(originPosDownward, objectData.Downward_Ray_Hit.point);

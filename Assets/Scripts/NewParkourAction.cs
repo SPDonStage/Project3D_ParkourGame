@@ -25,11 +25,11 @@ public class NewParkourAction : ScriptableObject
         if (checkHeight < minHeight || checkHeight > maxHeight)
             return false;
 
-        if (isLookAtObstacle == true)
+        if (isLookAtObstacle)
         {
             rotatingToObstacle = Quaternion.LookRotation(-objectData.Yoffset_Ray_Hit.normal);
         }
-        if (isMatching == true)
+        if (isMatching)
         {
             matchPosition = objectData.Yoffset_Ray_Hit.point;
         }
