@@ -19,7 +19,7 @@ public class EnvironmentChecker : MonoBehaviour
     void Awake()
     {
         GetComponent<PlayerController>().enabled = true;
-        characterController = GetComponent<CharacterController>();
+        characterController ??= GetComponent<CharacterController>();
        
     }
 
@@ -38,6 +38,7 @@ public class EnvironmentChecker : MonoBehaviour
         {
             originPosDownward = objectData.Yoffset_Ray_Hit.point + (transform.forward * 0.05f) + new Vector3(0, characterController.height + .5f, 0);
             objectData.Downward_Ray_Hit_Check = Physics.Raycast(originPosDownward, Vector3.down, out objectData.Downward_Ray_Hit, characterController.height + .5f, layerMask);
+            objectData.rotationToRotate = objectData.Yoffset_Ray_Hit.point - originPos;
         }    
         return objectData;
     }
@@ -51,8 +52,8 @@ public class EnvironmentChecker : MonoBehaviour
         {
             originPosDownward = objectData.Yoffset_Ray_Hit.point + (transform.forward * 0.05f) + new Vector3(0, characterController.height + .5f, 0);
             objectData.Downward_Ray_Hit_Check = Physics.Raycast(originPosDownward, Vector3.down, out objectData.Downward_Ray_Hit, characterController.height + .5f, layerMask);
-            Gizmos.color = Color.blue;
-            Gizmos.DrawLine(transform.position, objectData.Yoffset_Ray_Hit.point);
+            Gizmos.color = Color.blue; 
+            Gizmos.DrawRay(transform.position, objectData.Yoffset_Ray_Hit.point);
             if (objectData.Downward_Ray_Hit.collider)
             {
                 Gizmos.color = Color.green;
@@ -77,5 +78,6 @@ public class EnvironmentChecker : MonoBehaviour
         public bool Downward_Ray_Hit_Check;
         public RaycastHit Yoffset_Ray_Hit;
         public RaycastHit Downward_Ray_Hit;
+        public Vector3 rotationToRotate;
     }
 }

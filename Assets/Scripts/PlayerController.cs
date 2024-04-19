@@ -1,5 +1,6 @@
 
 using Cinemachine;
+using NUnit.Framework.Internal;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -7,6 +8,7 @@ using UnityEditor.Animations;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
 
 public class PlayerController : MonoBehaviour
 {
@@ -49,8 +51,10 @@ public class PlayerController : MonoBehaviour
     //Crouch
     [Header("---Crouch---")]
     private float slopeSlidingDirectionAngle = 0;
-    [SerializeField] private float slopeSlideSpeed = 0;
+    [SerializeField] private float slopeSlidingSpeedValueInput = 0;
+    public float slopeSlideSpeed;
     private bool isSlopeSliding = false;
+    float slopeAngle = 0;
     //Vault
     [Header("---Vault---")]
     [SerializeField] private List<NewParkourAction> newParkourActions;
@@ -59,10 +63,10 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     private void Awake()
     {
-        animator = GetComponent<Animator>();
-        characterController = GetComponent<CharacterController>();  
-        playerInput = new PlayerInput();
-        environmentChecker = GetComponent<EnvironmentChecker>();
+        animator ??= GetComponent<Animator>();
+        characterController ??= GetComponent<CharacterController>();  
+        playerInput ??= new PlayerInput();
+        environmentChecker ??= GetComponent<EnvironmentChecker>();
         camera = Camera.main;
     }
     private void OnDisable()
@@ -78,7 +82,6 @@ public class PlayerController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         state = CharacterState.Ground;
         SwitchCharacterStateAnimation(state);
-        
     }
 
     // Update is called once per frame
@@ -90,11 +93,12 @@ public class PlayerController : MonoBehaviour
         }
     }
     private void FixedUpdate()
-    {        
+    {
         Movement();
         Crouch();
         Slide();
         SlopeSlide();
+        antiStandingOnSlope();
         //Vault
         if (isInAction == false)
         {
@@ -119,19 +123,8 @@ public class PlayerController : MonoBehaviour
     }
     private void OnDrawGizmos()
     {
-        Physics.Raycast(transform.position, Vector3.down, out RaycastHit test, 5);
-        float angle = Vector3.Angle(test.normal, Vector3.up);
-        
-        //SetSlopeSlideVelocity(); 
-        // Debug.Log("slope:"+ Vector3.ProjectOnPlane(Vector3.down, slopeSlideRay_Hit.normal));
-     //   Debug.Log(Vector3.Dot(slopeSlideRay_Hit.normal, transform.forward));
-        Gizmos.color = Color.black;
-        Gizmos.DrawLine(transform.position,Vector3.up);
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position, test.normal);
-        //   Gizmos.DrawRay(transform.position, test.normal);
-        Gizmos.color = Color.magenta;
-        Gizmos.DrawRay(transform.position + Vector3.up, Vector3.down);
+       
+
     }
     private void SwitchCharacterStateAnimation(CharacterState state)
     {
@@ -146,6 +139,8 @@ public class PlayerController : MonoBehaviour
                 }
             case CharacterState.Crouch:
                 {
+                   // slopeSlideSpeed = 0;
+
                     characterController.center = new Vector3(0, 1.1f, 0);
                     characterController.height = 2.2f;
                     break;
@@ -167,15 +162,11 @@ public class PlayerController : MonoBehaviour
                 }
             case CharacterState.Slide:
                 {
-                    if (isSlopeSliding)
+                    if (!isSlopeSliding && slopeAngle != 0)
                     {
-                     //   animator.applyRootMotion = false;
-                        animator.CrossFade("Running Slide Loop", 0.2f);
+                        slopeSlideSpeed = slopeSlidingSpeedValueInput;
                     }
-                    else
-                    {
-                        animator.applyRootMotion = true;
-                    }
+             
                     break;
                 }
         }
@@ -245,26 +236,51 @@ public class PlayerController : MonoBehaviour
     }
     void SlopeSlide() //use character controller movement for slope sliding
     {
-        Physics.Raycast(transform.position, Vector3.down, out RaycastHit slopeSlideRay_Hit, 1);
+        Physics.Raycast(transform.position, Vector3.down, out RaycastHit slopeSlideRay_Hit, .3f);test = slopeSlideRay_Hit;
         slopeSlidingDirectionAngle = Vector3.Dot(slopeSlideRay_Hit.normal, transform.forward);
-        if ((slopeSlidingDirectionAngle >= 0.0001f || slopeSlidingDirectionAngle <= -0.0001f) && state == CharacterState.Slide) //0.0001 to avoid very small/Epsilon value
+        slopeAngle = 90 - Vector3.Angle(slopeSlideRay_Hit.normal, Vector3.up);
+        if (state == CharacterState.Slide) {
+            if (slopeSlidingDirectionAngle >= 0.0001f || slopeSlidingDirectionAngle <= -0.0001f) //0.0001 to avoid very small/Epsilon value 
+                                                                                                 //check if on slope
+            {
+                isSlopeSliding = true;
+                if (slopeSlidingDirectionAngle < 0) //Upward Direction
+                {
+                    slopeSlideSpeed = Mathf.Lerp(slopeSlideSpeed, 0, slopeSlideSpeed / 2 * Time.fixedDeltaTime);
+                    animator.applyRootMotion = false;
+                    animator.CrossFade("Running Slide Upward", 0.2f);
+                }
+                else //Downward Direction
+                {
+                    animator.CrossFade("Running Slide Loop", 0.2f); 
+                    slopeSlideSpeed = Mathf.Lerp(slopeSlideSpeed, slopeSlidingSpeedValueInput + slopeAngle / 10, slopeSlideSpeed * Time.fixedDeltaTime); 
+                }
+            }
+            else //gradually slow down speed when end slope sliding
+            {
+                slopeSlideSpeed = Mathf.Lerp(slopeSlideSpeed, 0, slopeSlideSpeed * Time.fixedDeltaTime); 
+            }
+            if (slopeSlideSpeed <= 1f)
+            {
+                isSlopeSliding = false;
+                slopeAngle = 0;
+            }
+            characterController.Move(transform.TransformDirection(vector3Movement) * slopeSlideSpeed * Time.fixedDeltaTime);
+        }
+    }
+    RaycastHit test;
+    void antiStandingOnSlope() //avoid bhop on slope
+    {
+        if (slopeAngle < characterController.slopeLimit)
         {
-            isSlopeSliding = true;
-            if (slopeSlidingDirectionAngle < 0) //Upward Direction
-            {
-
-                characterController.Move(transform.TransformDirection(vector3Movement) * 0); //stay sliding
-            }
-            else //Downward Direction
-            {
-                characterController.Move(transform.TransformDirection(vector3Movement) * slopeSlideSpeed * Time.fixedDeltaTime);
-            }
+            characterController.Move(new Vector3(test.normal.x, -test.normal.y, test.normal.z) * 5 * Time.fixedDeltaTime); Debug.Log("as");
+            SwitchCharacterStateAnimation(state = CharacterState.Jump);
         }
         else
         {
-            Debug.Log("sas");
-            isSlopeSliding = false;
+
         }
+         
     }
     IEnumerator VaultOverObstacle(NewParkourAction newParkourAction)
     {
@@ -297,20 +313,7 @@ public class PlayerController : MonoBehaviour
     {
         animator.MatchTarget(action.MatchPosition, transform.rotation, action.AvatarTarget, new MatchTargetWeightMask(new Vector3(0, 0, 0), 0), action.StartTimeMatching, action.EndTimeMatching);
     }
-    private void SetSlopeSlideVelocity()
-    {
-        float angle = 0;
-        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit slopeSlideRay_Hit, 5)) 
-        { 
-            angle = Vector3.Angle(slopeSlideRay_Hit.normal, Vector3.up); 
-            if (angle >= characterController.slopeLimit)
-            {
-                slopeSlideVelocity = Vector3.ProjectOnPlane(Vector3.down, slopeSlideRay_Hit.normal);
-                return;
-            } 
-        }
-        slopeSlideVelocity = Vector3.zero;
-    }
+  
     //private void OnAnimatorMove()
     //{
      

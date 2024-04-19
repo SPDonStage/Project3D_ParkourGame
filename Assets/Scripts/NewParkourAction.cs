@@ -27,7 +27,7 @@ public class NewParkourAction : ScriptableObject
 
         if (isLookAtObstacle)
         {
-            rotatingToObstacle = Quaternion.LookRotation(-objectData.Yoffset_Ray_Hit.normal);
+            rotatingToObstacle = Quaternion.LookRotation(objectData.rotationToRotate);
         }
         if (isMatching)
         {
