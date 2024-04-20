@@ -23,9 +23,10 @@ public class PlayerController : MonoBehaviour
     //Layer
     [SerializeField] private LayerMask groundLayer;
 
-
+    
     //
     [Header("---Player Setting---")]
+    #region
     [SerializeField] private CharacterState state;
     [SerializeField] private float speed;
     [SerializeField] private float speedMouse;
@@ -35,31 +36,52 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Camera camera;
     [SerializeField] CinemachineVirtualCamera virtualCamera;
     [SerializeField] Transform cameraPosition;
+    #endregion
+    
     [Header("---Movement---")]
+    #region
     //Movement
     Vector2 vector2MovementInput;
     Vector3 vector3Movement;
     Vector2 currentSpeed = Vector2.zero;
+    #endregion
+
     //Jump
     [Header("---Jump---")]
+    #region
+    private float gravity = Physics.gravity.y;
     [SerializeField] private float jumpMoveSpeed;
     Vector3 jumpHeightVector3;
     [SerializeField] Transform groundDetector;
     [SerializeField] Vector3 groundDetectorVector3;
     [SerializeField] private float jumpForce;
     private Vector3 slopeSlideVelocity = Vector3.zero;
+    #endregion
+    
     //Crouch
     [Header("---Crouch---")]
+    #region
     private float slopeSlidingDirectionAngle = 0;
     [SerializeField] private float slopeSlidingSpeedValueInput = 0;
     public float slopeSlideSpeed;
     private bool isSlopeSliding = false;
     float slopeAngle = 0;
+    private RaycastHit antiStandingOnSlope_Ray;
+    #endregion
+    
     //Vault
     [Header("---Vault---")]
+    #region
     [SerializeField] private List<NewParkourAction> newParkourActions;
     private EnvironmentChecker environmentChecker;
     private bool isInAction = false;
+    #endregion
+    //Wall Running
+    [Header("---Wall Running---")]
+    #region
+    Vector3 sideOfWall_Vector3;
+    #endregion
+
     // Start is called before the first frame update
     private void Awake()
     {
@@ -98,7 +120,8 @@ public class PlayerController : MonoBehaviour
         Crouch();
         Slide();
         SlopeSlide();
-        antiStandingOnSlope();
+        AntiStandingOnSlope();
+        WallRun();
         //Vault
         if (isInAction == false)
         {
@@ -120,6 +143,7 @@ public class PlayerController : MonoBehaviour
             if (state != CharacterState.Vault)
                 Jump();           
         }
+        
     }
     private void OnDrawGizmos()
     {
@@ -186,6 +210,7 @@ public class PlayerController : MonoBehaviour
     }  
     void Jump()
     {
+        Debug.Log(jumpForce);
         groundDetectorVector3 = new Vector3(groundDetector.position.x, groundDetector.position.y, groundDetector.position.z);
         Physics.Raycast(groundDetectorVector3, Vector3.down, out var checkGround, 0.3f, groundLayer);
         if (checkGround.collider)
@@ -196,8 +221,9 @@ public class PlayerController : MonoBehaviour
                 animator.SetBool("Jump", false);    
                 jumpHeightVector3.x = Mathf.Lerp(jumpHeightVector3.x, 0, speed * Time.fixedDeltaTime);
                 jumpHeightVector3.z = Mathf.Lerp(jumpHeightVector3.z, 0, speed * Time.fixedDeltaTime);
+                gravity = playerInput.Player.Jump.ReadValue<float>() == 1 ? Physics.gravity.y : 0;
                 jumpHeightVector3.y = playerInput.Player.Jump.ReadValue<float>() == 1 //set jumpforce
-                                ? jumpForce : Physics.gravity.y;
+                                ? jumpForce : gravity;
             }           
         }
         else
@@ -207,7 +233,7 @@ public class PlayerController : MonoBehaviour
             jumpHeightVector3.z = Mathf.Clamp(jumpHeightVector3.z, -5.5f, 5.5f);
             jumpHeightVector3 += vector3Movement * jumpMoveSpeed * Time.fixedDeltaTime;   //movement on air;
         }        
-        jumpHeightVector3 += Physics.gravity * Time.fixedDeltaTime;
+        jumpHeightVector3.y += gravity * Time.fixedDeltaTime;
         characterController.Move(transform.TransformDirection(jumpHeightVector3) * Time.fixedDeltaTime);
     }   
     void Crouch()
@@ -236,7 +262,8 @@ public class PlayerController : MonoBehaviour
     }
     void SlopeSlide() //use character controller movement for slope sliding
     {
-        Physics.Raycast(transform.position, Vector3.down, out RaycastHit slopeSlideRay_Hit, .3f);test = slopeSlideRay_Hit;
+        Physics.Raycast(transform.position, Vector3.down, out RaycastHit slopeSlideRay_Hit, .3f);
+        antiStandingOnSlope_Ray = slopeSlideRay_Hit;
         slopeSlidingDirectionAngle = Vector3.Dot(slopeSlideRay_Hit.normal, transform.forward);
         slopeAngle = 90 - Vector3.Angle(slopeSlideRay_Hit.normal, Vector3.up);
         if (state == CharacterState.Slide) {
@@ -268,12 +295,11 @@ public class PlayerController : MonoBehaviour
             characterController.Move(transform.TransformDirection(vector3Movement) * slopeSlideSpeed * Time.fixedDeltaTime);
         }
     }
-    RaycastHit test;
-    void antiStandingOnSlope() //avoid bhop on slope
+    void AntiStandingOnSlope() //avoid bhop on slope
     {
         if (slopeAngle < characterController.slopeLimit)
         {
-            characterController.Move(new Vector3(test.normal.x, -test.normal.y, test.normal.z) * 5 * Time.fixedDeltaTime); Debug.Log("as");
+            characterController.Move(new Vector3(antiStandingOnSlope_Ray.normal.x, -antiStandingOnSlope_Ray.normal.y, antiStandingOnSlope_Ray.normal.z) * 5 * Time.fixedDeltaTime);
             SwitchCharacterStateAnimation(state = CharacterState.Jump);
         }
         else
@@ -313,15 +339,42 @@ public class PlayerController : MonoBehaviour
     {
         animator.MatchTarget(action.MatchPosition, transform.rotation, action.AvatarTarget, new MatchTargetWeightMask(new Vector3(0, 0, 0), 0), action.StartTimeMatching, action.EndTimeMatching);
     }
-  
+    private void WallRun()
+    {
+        if (characterController.collisionFlags == CollisionFlags.Sides)
+        {
+            Debug.Log("sasa");
+            gravity = 0;
+            
+            
+            characterController.Move(transform.forward * speed * Time.fixedDeltaTime);
+        }
+    }
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit.controller.collisionFlags == CollisionFlags.Sides && hit.collider.CompareTag("Running Wall"))
+        {
+            animator.applyRootMotion = false;
+            sideOfWall_Vector3 = transform.InverseTransformPoint(hit.transform.position);
+            if (sideOfWall_Vector3.x < 0) //left side
+            {
+
+            }
+            else //right side
+            {
+               
+            }
+            
+        }
+    }
     //private void OnAnimatorMove()
     //{
-     
+
     //    if (state == CharacterState.Ground)
     //    {
-           
+
     //        velocity = animator.deltaPosition * speed;
-            
+
     //    }
     //}
 }
