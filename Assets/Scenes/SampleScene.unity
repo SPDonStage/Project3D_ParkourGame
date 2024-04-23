@@ -370,7 +370,7 @@ GameObject:
   - component: {fileID: 294247043}
   - component: {fileID: 294247042}
   - component: {fileID: 294247041}
-  m_Layer: 3
+  m_Layer: 9
   m_Name: Cube (4)
   m_TagString: Running Wall
   m_Icon: {fileID: 0}
@@ -456,13 +456,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 294247040}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.5, y: 0.5, z: 0.5, w: 0.5}
+  m_LocalRotation: {x: 0.5336603, y: 0.5336603, z: 0.46390373, w: 0.46390373}
   m_LocalPosition: {x: -23.81, y: 3.79, z: -7.9}
   m_LocalScale: {x: 10, y: 40, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 90}
+  m_LocalEulerAnglesHint: {x: 0, y: 98, z: 90}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -530,7 +530,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 255
+    m_Bits: 767
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -3019,7 +3019,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 3.6
-  m_Radius: 0.3
+  m_Radius: 0.4
   m_SlopeLimit: 40
   m_StepOffset: 0.1
   m_SkinWidth: 0.035
@@ -4385,8 +4385,11 @@ MonoBehaviour:
   slopeSlidingSpeedValueInput: 10
   slopeSlideSpeed: 10
   newParkourActions:
-  - {fileID: 11400000, guid: 15f66e8eb8640e840b16befbaaf788e4, type: 2}
   - {fileID: 11400000, guid: a7d7caca3fd88334389192836ee278da, type: 2}
+  - {fileID: 11400000, guid: 15f66e8eb8640e840b16befbaaf788e4, type: 2}
+  wallRunningLayerMask:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!4 &5895274565380757188
 Transform:
   m_ObjectHideFlags: 0
