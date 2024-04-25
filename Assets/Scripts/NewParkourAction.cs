@@ -19,7 +19,11 @@ public class NewParkourAction : ScriptableObject
     [SerializeField] float endTimeMatching;
     public bool checkIfAvailable(EnvironmentChecker.ObjectData objectData, Transform player)
     {
-        checkHeight = objectData.Downward_Ray_Hit.point.y + player.position.y < 0 ? -player.position.y : + player.position.y ;
+        Debug.Log("ray:" + objectData.Downward_Ray_Hit.point.y);
+        Debug.Log("player:" + player.position.y); Debug.Log("height:" + checkHeight);
+        // checkHeight = player.position.y < 0 ? Mathf.Abs(objectData.Downward_Ray_Hit.point.y + player.position.y) : objectData.Downward_Ray_Hit.point.y - player.position.y ;Debug.Log("height:"+checkHeight);
+        checkHeight = player.position.y < 0 ? Mathf.Abs(objectData.Downward_Ray_Hit.point.y - player.position.y)
+            : Mathf.Abs(-objectData.Downward_Ray_Hit.point.y + player.position.y);
         if (objectData.Downward_Ray_Hit.point.y == 0) 
             return false;
         if (checkHeight < minHeight || checkHeight > maxHeight)

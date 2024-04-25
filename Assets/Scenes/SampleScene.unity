@@ -1023,7 +1023,7 @@ Transform:
   m_GameObject: {fileID: 528668678}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.343, y: -1, z: -3.725}
+  m_LocalPosition: {x: 2.343, y: -0.55, z: -3.725}
   m_LocalScale: {x: 2.58, y: 1, z: 2.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4385,8 +4385,8 @@ MonoBehaviour:
   slopeSlidingSpeedValueInput: 10
   slopeSlideSpeed: 10
   newParkourActions:
-  - {fileID: 11400000, guid: a7d7caca3fd88334389192836ee278da, type: 2}
   - {fileID: 11400000, guid: 15f66e8eb8640e840b16befbaaf788e4, type: 2}
+  - {fileID: 11400000, guid: a7d7caca3fd88334389192836ee278da, type: 2}
   wallRunningLayerMask:
     serializedVersion: 2
     m_Bits: 512

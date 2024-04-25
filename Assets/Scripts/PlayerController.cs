@@ -358,9 +358,16 @@ public class PlayerController : MonoBehaviour
         if (checkRight_Ray.collider)
         {
             wallRunningVector3 = Vector3.Cross(checkRight_Ray.normal, Vector3.up);
-            Debug.Log(wallRunningVector3);
             characterController.Move(transform.TransformDirection(wallRunningVector3) * Time.fixedDeltaTime);
         }
+        if (checkLeft_Ray.collider)
+        {
+            wallRunningVector3 = Vector3.Cross(checkLeft_Ray.normal, Vector3.up);
+            characterController.Move(transform.TransformDirection(wallRunningVector3) * Time.fixedDeltaTime);
+        }
+        Debug.Log(wallRunningVector3);
+        Debug.Log("dir:"+(wallRunningVector3 - transform.position));
+
     }
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {

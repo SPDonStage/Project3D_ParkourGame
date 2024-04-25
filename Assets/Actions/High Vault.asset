@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: High Vault
   m_EditorClassIdentifier: 
   animationName: High Vault
-  minHeight: 0.9
-  maxHeight: 2
+  minHeight: 0.8
+  maxHeight: 1.65
   isLookAtObstacle: 1
+  checkHeight: 1.6500002
   isMatching: 1
   avatarTarget: 3
-  startTimeMatching: 0.6
-  endTimeMatching: 0.97
+  startTimeMatching: 0.45
+  endTimeMatching: 1
