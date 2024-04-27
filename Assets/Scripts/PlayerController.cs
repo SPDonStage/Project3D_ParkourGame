@@ -82,6 +82,7 @@ public class PlayerController : MonoBehaviour
     #region
     private bool canWallRunning = false;
     private Vector3 wallRunningVector3;
+    private Vector3 sideOfWall_Vector3;
     [SerializeField] private LayerMask wallRunningLayerMask;
     #endregion
 
@@ -177,8 +178,9 @@ public class PlayerController : MonoBehaviour
                 }
             case CharacterState.Jump:
                 {
-                    if (isInAction == false)
+                    if (isInAction == false && state != CharacterState.WallRunning)
                     {
+                        Physics.gravity = new Vector3(0, -9.8f, 0);
                         animator.CrossFade("On Air", 0.2f);
                         characterController.center = new Vector3(0, 1.1f, 0);
                         characterController.height = 2.2f;
@@ -201,6 +203,7 @@ public class PlayerController : MonoBehaviour
                 }
             case CharacterState.WallRunning:
                 {
+                    Physics.gravity = Vector3.zero;
                     animator.applyRootMotion = true;
                     break;
                 }
@@ -231,7 +234,7 @@ public class PlayerController : MonoBehaviour
                 animator.SetBool("Jump", false);    
                 jumpHeightVector3.x = Mathf.Lerp(jumpHeightVector3.x, 0, speed * Time.fixedDeltaTime);
                 jumpHeightVector3.z = Mathf.Lerp(jumpHeightVector3.z, 0, speed * Time.fixedDeltaTime);
-           //     gravity = playerInput.Player.Jump.ReadValue<float>() == 1 ? Physics.gravity.y : 0;
+                //     gravity = playerInput.Player.Jump.ReadValue<float>() == 1 ? Physics.gravity.y : 0;
                 jumpHeightVector3.y = playerInput.Player.Jump.ReadValue<float>() == 1 //set jumpforce
                                 ? jumpForce : Physics.gravity.y;
             }           
@@ -351,23 +354,31 @@ public class PlayerController : MonoBehaviour
     }
     private void WallRun()
     {
-        SwitchCharacterStateAnimation(state = CharacterState.WallRunning);
       //  animator.SetBool("isWallRunning", true);
         Physics.Raycast(transform.position, transform.right, out RaycastHit checkRight_Ray, 1f, wallRunningLayerMask);
         Physics.Raycast(transform.position, -transform.right, out RaycastHit checkLeft_Ray, 1f, wallRunningLayerMask);
         if (checkRight_Ray.collider)
         {
+            SwitchCharacterStateAnimation(state = CharacterState.WallRunning);
             wallRunningVector3 = Vector3.Cross(checkRight_Ray.normal, Vector3.up);
-            characterController.Move(transform.TransformDirection(wallRunningVector3) * Time.fixedDeltaTime);
         }
         if (checkLeft_Ray.collider)
         {
+            SwitchCharacterStateAnimation(state = CharacterState.WallRunning);
             wallRunningVector3 = Vector3.Cross(checkLeft_Ray.normal, Vector3.up);
-            characterController.Move(transform.TransformDirection(wallRunningVector3) * Time.fixedDeltaTime);
         }
-        Debug.Log(wallRunningVector3);
-        Debug.Log("dir:"+(wallRunningVector3 - transform.position));
-
+        if (!checkLeft_Ray.collider && !checkRight_Ray.collider) //cancel wall running state
+        {
+            SwitchCharacterStateAnimation(state = CharacterState.Ground);
+        }
+        if ((transform.forward - wallRunningVector3).sqrMagnitude > (transform.forward - -wallRunningVector3).sqrMagnitude) //check if change direction
+        {
+            wallRunningVector3 = -wallRunningVector3;
+        }
+        if (state == CharacterState.WallRunning)
+        {
+            characterController.Move(wallRunningVector3 * Time.fixedDeltaTime);
+        }
     }
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
