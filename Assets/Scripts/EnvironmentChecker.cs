@@ -39,6 +39,7 @@ public class EnvironmentChecker : MonoBehaviour
             originPosDownward = objectData.Yoffset_Ray_Hit.point + (transform.forward * 0.05f) + new Vector3(0, characterController.height + .5f, 0);
             objectData.Downward_Ray_Hit_Check = Physics.Raycast(originPosDownward, Vector3.down, out objectData.Downward_Ray_Hit, characterController.height + .5f, layerMask);
             objectData.rotationToRotate = objectData.Yoffset_Ray_Hit.point - originPos;
+            objectData.angleFacingToWall = Vector3.Angle(transform.forward, -objectData.Yoffset_Ray_Hit.normal);
         }    
         return objectData;
     }
@@ -79,5 +80,6 @@ public class EnvironmentChecker : MonoBehaviour
         public RaycastHit Yoffset_Ray_Hit;
         public RaycastHit Downward_Ray_Hit;
         public Vector3 rotationToRotate;
+        public float angleFacingToWall;
     }
 }

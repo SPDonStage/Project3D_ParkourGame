@@ -51,12 +51,14 @@ public class PlayerController : MonoBehaviour
     //Jump
     [Header("---Jump---")]
     #region
-  //  private float gravity = Physics.gravity.y;
+    //  private float gravity = Physics.gravity.y;
+    private bool canJump = false;
     [SerializeField] private float jumpMoveSpeed;
     Vector3 jumpHeightVector3;
     [SerializeField] Transform groundDetector;
     [SerializeField] Vector3 groundDetectorVector3;
     [SerializeField] private float jumpForce;
+    private Vector3 modifiedJumpVector3 = Vector3.zero;
     #endregion
     
     //Crouch
@@ -81,8 +83,8 @@ public class PlayerController : MonoBehaviour
     [Header("---Wall Running---")]
     #region
     private bool canWallRunning = false;
+    private bool canWallJump = false;
     private Vector3 wallRunningVector3;
-    private Vector3 sideOfWall_Vector3;
     [SerializeField] private LayerMask wallRunningLayerMask;
     #endregion
 
@@ -113,27 +115,20 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isInAction == false)
+        if (!isInAction)
         {            
             transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.AngleAxis(camera.transform.rotation.eulerAngles.y, Vector3.up), speedMouse * Time.fixedDeltaTime);
         }
+        if (!canWallRunning)
+            animator.applyRootMotion = true;
     }
     private void FixedUpdate()
     {
         Movement();
-        Crouch();
+     //   Crouch();
         Slide();
         SlopeSlide();
-        AntiStandingOnSlope();
-        WallRun();
-        if (!isInAction)
-        {
-        
-         //   if (state == CharacterState.Jump && canWallRunning)
-          //  {
-          //      playerInput.Player.Jump.performed += WallRun;
-          //  }
-        }
+        AntiStandingOnSlope();      
         //Vault
         if (!isInAction)
         {
@@ -141,7 +136,6 @@ public class PlayerController : MonoBehaviour
             {
                 if (playerInput.Player.Jump.ReadValue<float>() == 1)
                 {
-
                     foreach (var action in newParkourActions) 
                     {
                         if (action.checkIfAvailable(environmentChecker.checkData(), transform)) //check which action available
@@ -152,20 +146,25 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
-            if (state != CharacterState.Vault && state != CharacterState.WallRunning)
-                Jump();           
+            if (canJump)
+                Jump();
+            if (canWallRunning)
+            {
+                WallRun();
+            }
+            //   if (state != CharacterState.Vault && state == CharacterState.Ground)
+            //       canJump = true;      
         }
-        
     }
     private void SwitchCharacterStateAnimation(CharacterState state)
     {
         switch (state)
         {
             case CharacterState.Ground:
-                {
+                { 
                     characterController.center = new Vector3(0, 1.85f, 0);
                     characterController.height = 3.6f;
-                    animator.applyRootMotion = true;
+                    animator.applyRootMotion = true; 
                     break;
                 }
             case CharacterState.Crouch:
@@ -178,13 +177,19 @@ public class PlayerController : MonoBehaviour
                 }
             case CharacterState.Jump:
                 {
-                    if (isInAction == false && state != CharacterState.WallRunning)
+                    
+                    if (!isInAction && state != CharacterState.WallRunning)
                     {
+                        canJump = true;
                         Physics.gravity = new Vector3(0, -9.8f, 0);
                         animator.CrossFade("On Air", 0.2f);
                         characterController.center = new Vector3(0, 1.1f, 0);
                         characterController.height = 2.2f;
+                        //wall running
+                        animator.SetBool("isWallRunningRight", false);
+                        animator.SetBool("isWallRunningLeft", false);
                     }
+                   
                     break;
                 }
             case CharacterState.Vault:
@@ -203,8 +208,9 @@ public class PlayerController : MonoBehaviour
                 }
             case CharacterState.WallRunning:
                 {
+                  //  animator.SetBool("isWallRunning", true);
                     Physics.gravity = Vector3.zero;
-                    animator.applyRootMotion = true;
+                    animator.applyRootMotion = false;
                     break;
                 }
         }
@@ -221,13 +227,50 @@ public class PlayerController : MonoBehaviour
         }
         animator.SetFloat("Movement.x", currentSpeed.x);
         animator.SetFloat("Movement.y", currentSpeed.y);
-    }  
+    }
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            if (!isInAction)
+            {
+                if (state == CharacterState.Jump)
+                {
+                    Debug.Log(environmentChecker.checkData().angleFacingToWall);
+                    if (environmentChecker.checkData().angleFacingToWall > 45) //restrict angle
+                    {
+                        canWallRunning = true;
+                    }
+                    else
+                    {
+                        canJump = true;
+                        canWallRunning = false;
+                    }
+                }
+                else
+                {
+                    canJump = true;
+                    //   modifiedJumpVector3 = Vector3.zero;
+                }
+                if (state == CharacterState.WallRunning)
+                {
+                    canJump = true;
+                    canWallRunning = false;
+                }
+            }
+        }      
+    }
     void Jump()
     {
+     //   Debug.Log("asasass");
         groundDetectorVector3 = new Vector3(groundDetector.position.x, groundDetector.position.y, groundDetector.position.z);
         Physics.Raycast(groundDetectorVector3, Vector3.down, out var checkGround, 0.3f, groundLayer);
-        if (checkGround.collider)
+        if (checkGround.collider || state == CharacterState.WallRunning)
         {
+            if (checkGround.collider)
+            {
+                modifiedJumpVector3 = Vector3.zero;
+            }
             if (playerInput.Player.Crouch.ReadValue<float>() == 0)
             {
                 SwitchCharacterStateAnimation(state = CharacterState.Ground);
@@ -236,7 +279,7 @@ public class PlayerController : MonoBehaviour
                 jumpHeightVector3.z = Mathf.Lerp(jumpHeightVector3.z, 0, speed * Time.fixedDeltaTime);
                 //     gravity = playerInput.Player.Jump.ReadValue<float>() == 1 ? Physics.gravity.y : 0;
                 jumpHeightVector3.y = playerInput.Player.Jump.ReadValue<float>() == 1 //set jumpforce
-                                ? jumpForce : Physics.gravity.y;
+                                ? jumpForce : Physics.gravity.y;                
             }           
         }
         else
@@ -244,19 +287,19 @@ public class PlayerController : MonoBehaviour
             SwitchCharacterStateAnimation(state = CharacterState.Jump);
             jumpHeightVector3.x = Mathf.Clamp(jumpHeightVector3.x, -5.5f, 5.5f);
             jumpHeightVector3.z = Mathf.Clamp(jumpHeightVector3.z, -5.5f, 5.5f);
-            jumpHeightVector3 += vector3Movement * jumpMoveSpeed * Time.fixedDeltaTime;   //movement on air;
+            jumpHeightVector3 += (vector3Movement + 5 * modifiedJumpVector3) * jumpMoveSpeed  * Time.fixedDeltaTime;   //movement on air; //modifiedVector3 to add direction on jumping
         }        
         jumpHeightVector3.y += Physics.gravity.y * Time.fixedDeltaTime;
         characterController.Move(transform.TransformDirection(jumpHeightVector3) * Time.fixedDeltaTime);
     }   
-    void Crouch()
+    public void OnCrouch(InputAction.CallbackContext context)
     {
-        if (playerInput.Player.Crouch.ReadValue<float>() == 1)
+        if (context.started)
         {
             SwitchCharacterStateAnimation(state = CharacterState.Crouch);
             animator.SetBool("isCrouching", true);  
         }
-        else
+        if (context.canceled)
         {
             animator.SetBool("isCrouching", false);
         }     
@@ -353,32 +396,47 @@ public class PlayerController : MonoBehaviour
         animator.MatchTarget(action.MatchPosition, transform.rotation, action.AvatarTarget, new MatchTargetWeightMask(new Vector3(0, 0, 0), 0), action.StartTimeMatching, action.EndTimeMatching);
     }
     private void WallRun()
-    {
-      //  animator.SetBool("isWallRunning", true);
+    {      
         Physics.Raycast(transform.position, transform.right, out RaycastHit checkRight_Ray, 1f, wallRunningLayerMask);
         Physics.Raycast(transform.position, -transform.right, out RaycastHit checkLeft_Ray, 1f, wallRunningLayerMask);
         if (checkRight_Ray.collider)
         {
+            animator.SetBool("isWallRunningRight", true);
             SwitchCharacterStateAnimation(state = CharacterState.WallRunning);
             wallRunningVector3 = Vector3.Cross(checkRight_Ray.normal, Vector3.up);
+            animator.MatchTarget(checkRight_Ray.point, transform.rotation, AvatarTarget.RightFoot, new MatchTargetWeightMask(new Vector3(0, 0, 0), 0), 0, 1);
+            modifiedJumpVector3 = (Vector3.forward + Vector3.left) * speed;
+         
         }
         if (checkLeft_Ray.collider)
         {
+            animator.SetBool("isWallRunningLeft", true);
             SwitchCharacterStateAnimation(state = CharacterState.WallRunning);
             wallRunningVector3 = Vector3.Cross(checkLeft_Ray.normal, Vector3.up);
+            animator.MatchTarget(checkLeft_Ray.point, transform.rotation, AvatarTarget.LeftFoot, new MatchTargetWeightMask(new Vector3(0, 0, 0), 0), 0, 1);
+            modifiedJumpVector3 = (Vector3.forward + Vector3.right) * speed;
         }
         if (!checkLeft_Ray.collider && !checkRight_Ray.collider) //cancel wall running state
         {
-            SwitchCharacterStateAnimation(state = CharacterState.Ground);
+            SwitchCharacterStateAnimation(state = CharacterState.Jump);
+            //    animator.SetBool("isWallRunningRight", false);
+            //    animator.SetBool("isWallRunningLeft", false);
+            modifiedJumpVector3 = Vector3.forward * speed;
+            canWallRunning = false;
         }
         if ((transform.forward - wallRunningVector3).sqrMagnitude > (transform.forward - -wallRunningVector3).sqrMagnitude) //check if change direction
         {
             wallRunningVector3 = -wallRunningVector3;
         }
-        if (state == CharacterState.WallRunning)
+        if (state == CharacterState.WallRunning && (animator.GetBool("isWallRunningRight") || animator.GetBool("isWallRunningLeft")))
         {
-            characterController.Move(wallRunningVector3 * Time.fixedDeltaTime);
+            characterController.Move(wallRunningVector3 * speed * Time.fixedDeltaTime);
         }
+        canJump = false;
+    }
+    private void WallJump()
+    {
+
     }
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
