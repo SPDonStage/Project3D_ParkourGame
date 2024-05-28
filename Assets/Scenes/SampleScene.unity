@@ -551,7 +551,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -15.8, y: 3.5089998, z: 1.9140004}
+  m_LocalPosition: {x: -17, y: 3.5089998, z: 1.3140004}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1023,7 +1023,7 @@ Transform:
   m_GameObject: {fileID: 528668678}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.343, y: -0.55, z: -3.725}
+  m_LocalPosition: {x: 2.343, y: -0.55, z: -8.66}
   m_LocalScale: {x: 2.58, y: 1, z: 2.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1426,7 +1426,7 @@ Transform:
   m_GameObject: {fileID: 811871206}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -15.8, y: 3.5089998, z: 1.9140004}
+  m_LocalPosition: {x: -17, y: 3.5089998, z: 1.3140004}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1752,6 +1752,7 @@ GameObject:
   - component: {fileID: 1680296356}
   - component: {fileID: 1680296355}
   - component: {fileID: 1680296358}
+  - component: {fileID: 1680296359}
   m_Layer: 6
   m_Name: Plane
   m_TagString: Ground
@@ -1779,7 +1780,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 363a00e93cfc271439799b856ed5b5b9, type: 2}
+  - {fileID: 2100000, guid: bdd2c9c65ed40f94482c4f53d8c5115b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1846,6 +1847,33 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!54 &1680296359
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1680296353}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1001 &1754994239
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3738,7 +3766,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 5321d544e13958b41a5fe4fb9dd91ea8,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -15.8
+      value: -17
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5321d544e13958b41a5fe4fb9dd91ea8,
         type: 3}
@@ -3748,7 +3776,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 5321d544e13958b41a5fe4fb9dd91ea8,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.88
+      value: 1.28
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5321d544e13958b41a5fe4fb9dd91ea8,
         type: 3}
@@ -4247,6 +4275,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 5847838770740076750}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5321d544e13958b41a5fe4fb9dd91ea8,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5847838770740076751}
   m_SourcePrefab: {fileID: 100100000, guid: 5321d544e13958b41a5fe4fb9dd91ea8, type: 3}
 --- !u!1 &5517312843642534528
 GameObject:
@@ -4378,14 +4410,17 @@ MonoBehaviour:
   state: 0
   speed: 5
   speedMouse: 50
+  characterController: {fileID: 2701385501788672858}
   animator: {fileID: 1120019847}
   camera: {fileID: 0}
   virtualCamera: {fileID: 811871208}
   cameraPosition: {fileID: 3111165523429597519}
+  canJump: 0
+  onJumping: 0
   jumpMoveSpeed: 3
   groundDetector: {fileID: 8108990163924665121}
   groundDetectorVector3: {x: 0, y: 0, z: 0}
-  jumpForce: 10
+  jumpForceValue: 10
   slopeSlidingSpeedValueInput: 10
   slopeSlideSpeed: 10
   newParkourActions:
@@ -4476,11 +4511,154 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 75f5b7eb-446f-4d94-b1ff-e81d95440ee8
     m_ActionName: 'Player/Mouse[/Mouse/delta]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5847838770740076749}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnSkill1
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 998ddb07-6cc7-446b-86b0-bcd0e7600983
+    m_ActionName: 'Player/Skill 1[/Keyboard/z]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5847838770740076749}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnSkill2
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: f94f9881-12b7-4c74-9c2a-9204ec6cc2f4
+    m_ActionName: 'Player/Skill 2[/Keyboard/x]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5847838770740076749}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnSkill3
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 81ffbe37-35f6-459b-b584-96d26cbdbe0c
+    m_ActionName: 'Player/Skill 3[/Keyboard/c]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5847838770740076749}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnSkill4
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 0ef447a1-64ab-49a2-9e91-5b64599d1849
+    m_ActionName: 'Player/Skill 4[/Keyboard/v]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 1258de9d-c055-4777-8fea-dd3f800c200f
+    m_ActionName: 'Player/MouseClick[/Mouse/leftButton]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5847838770740076749}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnSkill5
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 55217cf6-5f7e-48aa-bda3-b7caf8d2de83
+    m_ActionName: 'Player/Skill 5[/Keyboard/n]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5847838770740076749}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnSkill6
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 5de4c708-75e7-4808-b977-a08a87873efe
+    m_ActionName: 'Player/Skill 6[/Keyboard/m]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5847838770740076749}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnSkill7
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 8bde5335-2e9f-464b-a453-99afc1537c0c
+    m_ActionName: 'Player/Skill 7[/Keyboard/comma]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &5847838770740076751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1120019839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 807bf3165c227db45b5a769c12de10c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dashForce: 30
+  highJumpCD_Value: 3
+  wallingCD_Value: 3
+  wallReview_Prefab: {fileID: 3880713776850145389, guid: f08b74a21b1f65240951771fdfb3c363,
+    type: 3}
+  wall_Prefab: {fileID: 3880713776850145389, guid: 7c7d560bc17d03749b28d843f371feef,
+    type: 3}
+  isWallReview: 0
+  smokePrefab: {fileID: 8825793130287221438, guid: 53e473ba9cf1b494c8822a1dd90a9723,
+    type: 3}
+  turretReview_Prefab: {fileID: 7742213336119896658, guid: c44acc521c1b6db4aa0e487c592fceed,
+    type: 3}
+  turret_Prefab: {fileID: 7742213336119896658, guid: b8b036c99bd80ea4f887a5f83ea8b62b,
+    type: 3}
+  isTurretReview: 0
 --- !u!4 &5895274565380757188
 Transform:
   m_ObjectHideFlags: 0

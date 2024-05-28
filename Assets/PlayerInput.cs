@@ -71,6 +71,78 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Skill 1"",
+                    ""type"": ""Button"",
+                    ""id"": ""998ddb07-6cc7-446b-86b0-bcd0e7600983"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Skill 2"",
+                    ""type"": ""Button"",
+                    ""id"": ""f94f9881-12b7-4c74-9c2a-9204ec6cc2f4"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Skill 3"",
+                    ""type"": ""Button"",
+                    ""id"": ""81ffbe37-35f6-459b-b584-96d26cbdbe0c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Skill 4"",
+                    ""type"": ""Button"",
+                    ""id"": ""0ef447a1-64ab-49a2-9e91-5b64599d1849"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Skill 5"",
+                    ""type"": ""Button"",
+                    ""id"": ""55217cf6-5f7e-48aa-bda3-b7caf8d2de83"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Skill 6"",
+                    ""type"": ""Button"",
+                    ""id"": ""5de4c708-75e7-4808-b977-a08a87873efe"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Skill 7"",
+                    ""type"": ""Button"",
+                    ""id"": ""8bde5335-2e9f-464b-a453-99afc1537c0c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MouseClick"",
+                    ""type"": ""Button"",
+                    ""id"": ""1258de9d-c055-4777-8fea-dd3f800c200f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -172,6 +244,94 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Crouch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""eab2190c-db62-4360-ad20-54bef32b3c89"",
+                    ""path"": ""<Keyboard>/z"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Skill 1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f4eb5181-d8e8-4e86-832a-fb35c4a92db8"",
+                    ""path"": ""<Keyboard>/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Skill 2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8efeb9b8-a8c5-46ff-b57a-f17a6573967c"",
+                    ""path"": ""<Keyboard>/v"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Skill 3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4dddcc4f-0f7d-44c0-bf2a-b6d2fbfc3058"",
+                    ""path"": ""<Keyboard>/b"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Skill 4"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""db65db20-e4df-4913-b19c-aa4c8a1b6f25"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MouseClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""87508213-78c6-4501-8072-f7de85280b24"",
+                    ""path"": ""<Keyboard>/n"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Skill 5"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""847c5996-cec5-41b7-9599-edd07da73f0d"",
+                    ""path"": ""<Keyboard>/m"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Skill 6"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b58d6791-5c8b-41c9-be25-4dcf5d89a934"",
+                    ""path"": ""<Keyboard>/comma"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Skill 7"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -185,6 +345,14 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
         m_Player_Crouch = m_Player.FindAction("Crouch", throwIfNotFound: true);
         m_Player_Mouse = m_Player.FindAction("Mouse", throwIfNotFound: true);
+        m_Player_Skill1 = m_Player.FindAction("Skill 1", throwIfNotFound: true);
+        m_Player_Skill2 = m_Player.FindAction("Skill 2", throwIfNotFound: true);
+        m_Player_Skill3 = m_Player.FindAction("Skill 3", throwIfNotFound: true);
+        m_Player_Skill4 = m_Player.FindAction("Skill 4", throwIfNotFound: true);
+        m_Player_Skill5 = m_Player.FindAction("Skill 5", throwIfNotFound: true);
+        m_Player_Skill6 = m_Player.FindAction("Skill 6", throwIfNotFound: true);
+        m_Player_Skill7 = m_Player.FindAction("Skill 7", throwIfNotFound: true);
+        m_Player_MouseClick = m_Player.FindAction("MouseClick", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -251,6 +419,14 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Sprint;
     private readonly InputAction m_Player_Crouch;
     private readonly InputAction m_Player_Mouse;
+    private readonly InputAction m_Player_Skill1;
+    private readonly InputAction m_Player_Skill2;
+    private readonly InputAction m_Player_Skill3;
+    private readonly InputAction m_Player_Skill4;
+    private readonly InputAction m_Player_Skill5;
+    private readonly InputAction m_Player_Skill6;
+    private readonly InputAction m_Player_Skill7;
+    private readonly InputAction m_Player_MouseClick;
     public struct PlayerActions
     {
         private @PlayerInput m_Wrapper;
@@ -260,6 +436,14 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
         public InputAction @Crouch => m_Wrapper.m_Player_Crouch;
         public InputAction @Mouse => m_Wrapper.m_Player_Mouse;
+        public InputAction @Skill1 => m_Wrapper.m_Player_Skill1;
+        public InputAction @Skill2 => m_Wrapper.m_Player_Skill2;
+        public InputAction @Skill3 => m_Wrapper.m_Player_Skill3;
+        public InputAction @Skill4 => m_Wrapper.m_Player_Skill4;
+        public InputAction @Skill5 => m_Wrapper.m_Player_Skill5;
+        public InputAction @Skill6 => m_Wrapper.m_Player_Skill6;
+        public InputAction @Skill7 => m_Wrapper.m_Player_Skill7;
+        public InputAction @MouseClick => m_Wrapper.m_Player_MouseClick;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -284,6 +468,30 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Mouse.started += instance.OnMouse;
             @Mouse.performed += instance.OnMouse;
             @Mouse.canceled += instance.OnMouse;
+            @Skill1.started += instance.OnSkill1;
+            @Skill1.performed += instance.OnSkill1;
+            @Skill1.canceled += instance.OnSkill1;
+            @Skill2.started += instance.OnSkill2;
+            @Skill2.performed += instance.OnSkill2;
+            @Skill2.canceled += instance.OnSkill2;
+            @Skill3.started += instance.OnSkill3;
+            @Skill3.performed += instance.OnSkill3;
+            @Skill3.canceled += instance.OnSkill3;
+            @Skill4.started += instance.OnSkill4;
+            @Skill4.performed += instance.OnSkill4;
+            @Skill4.canceled += instance.OnSkill4;
+            @Skill5.started += instance.OnSkill5;
+            @Skill5.performed += instance.OnSkill5;
+            @Skill5.canceled += instance.OnSkill5;
+            @Skill6.started += instance.OnSkill6;
+            @Skill6.performed += instance.OnSkill6;
+            @Skill6.canceled += instance.OnSkill6;
+            @Skill7.started += instance.OnSkill7;
+            @Skill7.performed += instance.OnSkill7;
+            @Skill7.canceled += instance.OnSkill7;
+            @MouseClick.started += instance.OnMouseClick;
+            @MouseClick.performed += instance.OnMouseClick;
+            @MouseClick.canceled += instance.OnMouseClick;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -303,6 +511,30 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Mouse.started -= instance.OnMouse;
             @Mouse.performed -= instance.OnMouse;
             @Mouse.canceled -= instance.OnMouse;
+            @Skill1.started -= instance.OnSkill1;
+            @Skill1.performed -= instance.OnSkill1;
+            @Skill1.canceled -= instance.OnSkill1;
+            @Skill2.started -= instance.OnSkill2;
+            @Skill2.performed -= instance.OnSkill2;
+            @Skill2.canceled -= instance.OnSkill2;
+            @Skill3.started -= instance.OnSkill3;
+            @Skill3.performed -= instance.OnSkill3;
+            @Skill3.canceled -= instance.OnSkill3;
+            @Skill4.started -= instance.OnSkill4;
+            @Skill4.performed -= instance.OnSkill4;
+            @Skill4.canceled -= instance.OnSkill4;
+            @Skill5.started -= instance.OnSkill5;
+            @Skill5.performed -= instance.OnSkill5;
+            @Skill5.canceled -= instance.OnSkill5;
+            @Skill6.started -= instance.OnSkill6;
+            @Skill6.performed -= instance.OnSkill6;
+            @Skill6.canceled -= instance.OnSkill6;
+            @Skill7.started -= instance.OnSkill7;
+            @Skill7.performed -= instance.OnSkill7;
+            @Skill7.canceled -= instance.OnSkill7;
+            @MouseClick.started -= instance.OnMouseClick;
+            @MouseClick.performed -= instance.OnMouseClick;
+            @MouseClick.canceled -= instance.OnMouseClick;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -327,5 +559,13 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnSprint(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
         void OnMouse(InputAction.CallbackContext context);
+        void OnSkill1(InputAction.CallbackContext context);
+        void OnSkill2(InputAction.CallbackContext context);
+        void OnSkill3(InputAction.CallbackContext context);
+        void OnSkill4(InputAction.CallbackContext context);
+        void OnSkill5(InputAction.CallbackContext context);
+        void OnSkill6(InputAction.CallbackContext context);
+        void OnSkill7(InputAction.CallbackContext context);
+        void OnMouseClick(InputAction.CallbackContext context);
     }
 }

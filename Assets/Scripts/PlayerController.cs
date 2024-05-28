@@ -24,18 +24,16 @@ public class PlayerController : MonoBehaviour
     }
     //Layer
     [SerializeField] private LayerMask groundLayer;
-
-    
     //
     [Header("---Player Setting---")]
     #region
     [SerializeField] private CharacterState state;
     [SerializeField] private float speed;
     [SerializeField] private float speedMouse;
-    private CharacterController characterController;
-    [SerializeField] private PlayerInput playerInput;
+    public CharacterController characterController;
+    [SerializeField] public PlayerInput playerInput;
     [SerializeField] private Animator animator;
-    [SerializeField] Camera camera;
+    [SerializeField] public Camera camera;
     [SerializeField] CinemachineVirtualCamera virtualCamera;
     [SerializeField] Transform cameraPosition;
     #endregion
@@ -52,12 +50,14 @@ public class PlayerController : MonoBehaviour
     [Header("---Jump---")]
     #region
     //  private float gravity = Physics.gravity.y;
-    private bool canJump = false;
+    public bool canJump = false;
+    public bool onJumping = false;
     [SerializeField] private float jumpMoveSpeed;
     Vector3 jumpHeightVector3;
     [SerializeField] Transform groundDetector;
     [SerializeField] Vector3 groundDetectorVector3;
-    [SerializeField] private float jumpForce;
+    [SerializeField] public float jumpForceValue;
+    [NonSerialized] public float jumpForce;
     private Vector3 modifiedJumpVector3 = Vector3.zero;
     #endregion
     
@@ -109,6 +109,7 @@ public class PlayerController : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         state = CharacterState.Ground;
+        jumpForce = jumpForceValue;
         SwitchCharacterStateAnimation(state);
     }
 
@@ -146,14 +147,14 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
-            if (canJump)
+            if (onJumping)
                 Jump();
             if (canWallRunning)
             {
                 WallRun();
             }
             //   if (state != CharacterState.Vault && state == CharacterState.Ground)
-            //       canJump = true;      
+            //       onJumping = true;      
         }
     }
     private void SwitchCharacterStateAnimation(CharacterState state)
@@ -161,7 +162,7 @@ public class PlayerController : MonoBehaviour
         switch (state)
         {
             case CharacterState.Ground:
-                { 
+                {
                     characterController.center = new Vector3(0, 1.85f, 0);
                     characterController.height = 3.6f;
                     animator.applyRootMotion = true; 
@@ -180,7 +181,7 @@ public class PlayerController : MonoBehaviour
                     
                     if (!isInAction && state != CharacterState.WallRunning)
                     {
-                        canJump = true;
+                        onJumping = true;
                         Physics.gravity = new Vector3(0, -9.8f, 0);
                         animator.CrossFade("On Air", 0.2f);
                         characterController.center = new Vector3(0, 1.1f, 0);
@@ -243,18 +244,19 @@ public class PlayerController : MonoBehaviour
                     }
                     else
                     {
-                        canJump = true;
+                        onJumping = true;
                         canWallRunning = false;
                     }
                 }
                 else
                 {
                     canJump = true;
+                    onJumping = true;
                     //   modifiedJumpVector3 = Vector3.zero;
                 }
                 if (state == CharacterState.WallRunning)
                 {
-                    canJump = true;
+                    onJumping = true;
                     canWallRunning = false;
                 }
             }
@@ -278,12 +280,14 @@ public class PlayerController : MonoBehaviour
                 jumpHeightVector3.x = Mathf.Lerp(jumpHeightVector3.x, 0, speed * Time.fixedDeltaTime);
                 jumpHeightVector3.z = Mathf.Lerp(jumpHeightVector3.z, 0, speed * Time.fixedDeltaTime);
                 //     gravity = playerInput.Player.Jump.ReadValue<float>() == 1 ? Physics.gravity.y : 0;
-                jumpHeightVector3.y = playerInput.Player.Jump.ReadValue<float>() == 1 //set jumpforce
-                                ? jumpForce : Physics.gravity.y;                
+                jumpHeightVector3.y = canJump ? jumpForce : Physics.gravity.y;  //set jumpforce
+                                             
             }           
         }
         else
         {
+            canJump = false;
+            jumpForce = jumpForceValue;
             SwitchCharacterStateAnimation(state = CharacterState.Jump);
             jumpHeightVector3.x = Mathf.Clamp(jumpHeightVector3.x, -5.5f, 5.5f);
             jumpHeightVector3.z = Mathf.Clamp(jumpHeightVector3.z, -5.5f, 5.5f);
@@ -432,52 +436,56 @@ public class PlayerController : MonoBehaviour
         {
             characterController.Move(wallRunningVector3 * speed * Time.fixedDeltaTime);
         }
-        canJump = false;
+        onJumping = false;
     }
-    private void WallJump()
+
+    public void OnSkill1(InputAction.CallbackContext context)
     {
-
-    }
-    private void OnControllerColliderHit(ControllerColliderHit hit)
+        if (context.started)
+        {
+            GetComponent<SkillManagement>().HighJump();
+        }
+    } 
+    public void OnSkill2(InputAction.CallbackContext context)
     {
-        //if (hit.collider.CompareTag("Running Wall"))
-        //{
-        // //   Debug.Log("t");
-        //    canWallRunning = true;
-        //    sideOfWall_Vector3 = transform.InverseTransformPoint(hit.transform.position);
-        //    if (sideOfWall_Vector3.x < 0) //left side
-        //    {
-
-        //            animator.MatchTarget(hit.point, transform.rotation, AvatarTarget.RightFoot, new MatchTargetWeightMask(new Vector3(0, 0, 0), 0), 0, 1);
-        //         //   animator.MatchTarget(hit.point, transform.rotation, AvatarTarget.LeftFoot, new MatchTargetWeightMask(new Vector3(0, 0, 0), 0), 0, 1);
-                
-        //    }
-        //    else //right side
-        //    {
-               
-        //    }
-            
-        //}
-        //else
-        //{
-        // //   Debug.Log("f");
-        //    if (animator.GetBool("isWallRunning"))
-        //    {
-        //      //  SwitchCharacterStateAnimation(state = CharacterState.Jump);
-        //    //    canWallRunning = false;
-        //      //  animator.SetBool("isWallRunning", false);
-        //    }
-            
-        //}
+        if (context.started)
+        {
+            GetComponent<SkillManagement>().isWallReview = true;
+        }
+    } 
+    public void OnSkill3(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            StartCoroutine(GetComponent<SkillManagement>().Dash());
+        }
+    } 
+    public void OnSkill4(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+           GetComponent<SkillManagement>().ThrowSmoke();
+        }
     }
-    //private void OnAnimatorMove()
-    //{
-
-    //    if (state == CharacterState.Ground)
-    //    {
-
-    //        velocity = animator.deltaPosition * speed;
-
-    //    }
-    //}
+    public void OnSkill5(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            GetComponent<SkillManagement>().isTurretReview = true;
+        }
+    }
+    public void OnSkill6(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            GetComponent<SkillManagement>().ThrowSmoke();
+        }
+    }
+    public void OnSkill7(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            GetComponent<SkillManagement>().ThrowSmoke();
+        }
+    }
 }
