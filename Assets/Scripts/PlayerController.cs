@@ -179,7 +179,7 @@ public class PlayerController : MonoBehaviour
             case CharacterState.Jump:
                 {
                     
-                    if (!isInAction && state != CharacterState.WallRunning)
+                    if (!isInAction && state != CharacterState.WallRunning && state != CharacterState.Slide)
                     {
                         onJumping = true;
                         Physics.gravity = new Vector3(0, -9.8f, 0);
@@ -284,7 +284,7 @@ public class PlayerController : MonoBehaviour
                                              
             }           
         }
-        else
+        else if (!checkGround.collider)
         {
             canJump = false;
             jumpForce = jumpForceValue;
@@ -360,7 +360,7 @@ public class PlayerController : MonoBehaviour
         if (slopeAngle < characterController.slopeLimit)
         {
             characterController.Move(new Vector3(antiStandingOnSlope_Ray.normal.x, -antiStandingOnSlope_Ray.normal.y, antiStandingOnSlope_Ray.normal.z) * 5 * Time.fixedDeltaTime);
-            SwitchCharacterStateAnimation(state = CharacterState.Jump);
+           // SwitchCharacterStateAnimation(state = CharacterState.Jump);
         }
         else
         {
@@ -370,6 +370,8 @@ public class PlayerController : MonoBehaviour
     }
     IEnumerator VaultOverObstacle(NewParkourAction newParkourAction)
     {
+        canJump = false;
+        onJumping = false;
         SwitchCharacterStateAnimation(state = CharacterState.Vault);
         animator.CrossFade(newParkourAction.AnimationName, 0.2f);
         var animatorState = animator.GetNextAnimatorStateInfo(0);
