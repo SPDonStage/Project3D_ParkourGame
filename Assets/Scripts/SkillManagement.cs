@@ -5,6 +5,7 @@ using UnityEngine;
 public class SkillManagement : MonoBehaviour
 {
     private PlayerController playerController;
+    [SerializeField] private LayerMask layerMask;
     // Start is called before the first frame update
     private void Awake()
     {
@@ -160,8 +161,18 @@ public class SkillManagement : MonoBehaviour
             }
             else
             {
-                turretReview.transform.position = transform.position + transform.forward * 5;
+                Physics.Raycast(transform.position, transform.forward, out RaycastHit checkForward, 5, layerMask);
+                turretReview.transform.position = transform.position + transform.forward * 5 + transform.up * .5f;
                 turretReview.transform.rotation = transform.rotation;
+                if (checkForward.collider)
+                {
+                    Physics.Raycast(checkForward.point + (transform.forward * 0.05f) + Vector3.up * 2, Vector3.down, out RaycastHit checkUpToDown, 2, layerMask);
+                    if (checkUpToDown.collider)
+                    {
+                        turretReview.transform.position = new Vector3(turretReview.transform.position.x, checkUpToDown.point.y + 0.5f, turretReview.transform.position.z);
+                    }
+                }
+                
 
                 if (turretReview.gameObject.activeSelf)
                 {

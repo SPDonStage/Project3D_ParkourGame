@@ -1013,6 +1013,7 @@ GameObject:
   - component: {fileID: 528668681}
   - component: {fileID: 528668680}
   - component: {fileID: 528668679}
+  - component: {fileID: 528668683}
   m_Layer: 3
   m_Name: Cube
   m_TagString: Obstacle
@@ -1106,6 +1107,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &528668683
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 528668678}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1001 &666595587
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5375,7 +5403,7 @@ MonoBehaviour:
     m_Bits: 584
   state: 0
   speed: 5
-  speedMouse: 50
+  speedMouse: 70
   characterController: {fileID: 2701385501788672858}
   animator: {fileID: 1120019847}
   camera: {fileID: 0}
@@ -5610,6 +5638,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 807bf3165c227db45b5a769c12de10c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 8
   dashForce: 30
   highJumpCD_Value: 3
   wallingCD_Value: 3
@@ -5620,7 +5651,7 @@ MonoBehaviour:
   isWallReview: 0
   smokePrefab: {fileID: 8825793130287221438, guid: 53e473ba9cf1b494c8822a1dd90a9723,
     type: 3}
-  turretReview_Prefab: {fileID: 7742213336119896658, guid: c44acc521c1b6db4aa0e487c592fceed,
+  turretReview_Prefab: {fileID: 3996501014663809361, guid: 365b25ac422654a4797bccc10a5f9925,
     type: 3}
   turret_Prefab: {fileID: 7742213336119896658, guid: b8b036c99bd80ea4f887a5f83ea8b62b,
     type: 3}
