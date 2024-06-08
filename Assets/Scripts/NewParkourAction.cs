@@ -35,7 +35,7 @@ public class NewParkourAction : ScriptableObject
         }
         if (isMatching)
         {
-            matchPosition = objectData.Yoffset_Ray_Hit.point;
+            matchPosition = objectData.Downward_Ray_Hit.point;Debug.Log(matchPosition);
         }
         return true;
     }

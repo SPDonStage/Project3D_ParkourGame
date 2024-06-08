@@ -182,7 +182,7 @@ public class PlayerController : MonoBehaviour
                     {
                         onJumping = true;
                         Physics.gravity = new Vector3(0, -9.8f, 0);
-                        animator.CrossFade("On Air", 0.2f);
+                     //   animator.CrossFade("On Air", 0.2f);
                         characterController.center = new Vector3(0, 1.1f, 0);
                         characterController.height = 2.2f;
                         //wall running

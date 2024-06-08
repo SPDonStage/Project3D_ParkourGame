@@ -16,8 +16,8 @@ MonoBehaviour:
   minHeight: 0.85
   maxHeight: 1.65
   isLookAtObstacle: 1
-  checkHeight: 3.971936
+  checkHeight: 0.9650001
   isMatching: 1
   avatarTarget: 3
-  startTimeMatching: 0.45
-  endTimeMatching: 1
+  startTimeMatching: 0.3
+  endTimeMatching: 0.5
