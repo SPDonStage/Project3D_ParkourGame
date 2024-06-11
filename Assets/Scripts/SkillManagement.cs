@@ -164,17 +164,7 @@ public class SkillManagement : MonoBehaviour
                 Physics.Raycast(transform.position, transform.forward, out RaycastHit checkForward, 5, layerMask);
                 turretReview.transform.position = transform.position + transform.forward * 5 + transform.up * .5f;
                 turretReview.transform.rotation = transform.rotation;
-                if (checkForward.collider)
-                {
-                    Physics.Raycast(checkForward.point + (transform.forward * 0.05f) + Vector3.up * 2, Vector3.down, out RaycastHit checkUpToDown, 2, layerMask);
-                    if (checkUpToDown.collider)
-                    {
-                        turretReview.transform.position = new Vector3(turretReview.transform.position.x, checkUpToDown.point.y + 0.5f, turretReview.transform.position.z);
-                    }
-                }
-                
-
-                if (turretReview.gameObject.activeSelf)
+                if (turretReview.gameObject.activeSelf && !turretReview.GetComponent<ObjectReview>().isCollided && turretReview.GetComponent<ObjectReview>().isGrounded)
                 {
                     if (playerController.playerInput.Player.MouseClick.triggered)
                     {

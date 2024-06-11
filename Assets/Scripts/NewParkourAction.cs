@@ -17,6 +17,7 @@ public class NewParkourAction : ScriptableObject
     [SerializeField] AvatarTarget avatarTarget;
     [SerializeField] float startTimeMatching;
     [SerializeField] float endTimeMatching;
+    [SerializeField] private Vector3 positionHeight;
     public bool checkIfAvailable(EnvironmentChecker.ObjectData objectData, Transform player)
     {
   //      Debug.Log("ray:" + objectData.Downward_Ray_Hit.point.y);
@@ -35,7 +36,7 @@ public class NewParkourAction : ScriptableObject
         }
         if (isMatching)
         {
-            matchPosition = objectData.Downward_Ray_Hit.point;Debug.Log(matchPosition);
+            matchPosition = objectData.Downward_Ray_Hit.point;
         }
         return true;
     }
@@ -48,4 +49,5 @@ public class NewParkourAction : ScriptableObject
     public AvatarTarget AvatarTarget => avatarTarget;
     public float StartTimeMatching => startTimeMatching;
     public float EndTimeMatching => endTimeMatching;
+    public  Vector3 PositionHeight => positionHeight;
 }

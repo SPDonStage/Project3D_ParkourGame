@@ -10,7 +10,7 @@ public class EnvironmentChecker : MonoBehaviour
 {
     private CharacterController characterController;
     private Vector3 Yoffset_Ray = Vector3.zero;
-    private float Yoffset_Ray_Length = 2f;
+    private float Yoffset_Ray_Length = 1.5f;
     [SerializeField] private LayerMask layerMask;
     private Vector3 originPos;
     private Vector3 originPosDownward;

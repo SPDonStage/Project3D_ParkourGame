@@ -246,6 +246,10 @@ public class PlayerController : MonoBehaviour
                         onJumping = true;
                         canWallRunning = false;
                     }
+                    if (environmentChecker.checkData().angleFacingToWall <= 45)
+                    {
+                     //   animator.SetBool("isClimbWall",true);
+                    }
                 }
                 else
                 {
@@ -377,13 +381,10 @@ public class PlayerController : MonoBehaviour
         float timeCounter = 0;
         while (timeCounter <= animatorState.length)
         {
+            characterController.enabled = false;
             if (newParkourAction.IsLookAtObstacle)
             {
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, newParkourAction.RotatingToObstacle,150 * Time.fixedDeltaTime);   //player rotation
-            //    virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.Value = Quaternion.RotateTowards   //horizontal rotation
-             //       (cameraPosition.rotation, newParkourAction.RotatingToObstacle, 150 * Time.fixedDeltaTime).eulerAngles.y;
-              //  virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.Value = Mathf.Lerp
-             //       (virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.Value, 0, 5 * Time.fixedDeltaTime); ; //vertical rotation
             }
             if (newParkourAction.IsMatching)
             {
@@ -393,12 +394,13 @@ public class PlayerController : MonoBehaviour
             yield return new WaitForSeconds(Time.fixedDeltaTime);
         //    virtualCamera.GetComponent<CinemachineVirtualCamera>().enabled = true;
         }
+        characterController.enabled = true;
         SwitchCharacterStateAnimation(state = CharacterState.Ground);
         isInAction = false;
     }
     private void TargetMatching(NewParkourAction action)
     {
-        animator.MatchTarget(action.MatchPosition, transform.rotation, action.AvatarTarget, new MatchTargetWeightMask(new Vector3(0, 0, 0), 0), action.StartTimeMatching, action.EndTimeMatching);
+        animator.MatchTarget(action.MatchPosition, transform.rotation, action.AvatarTarget, new MatchTargetWeightMask(action.PositionHeight,0), action.StartTimeMatching, action.EndTimeMatching);
     }
     private void WallRun()
     {

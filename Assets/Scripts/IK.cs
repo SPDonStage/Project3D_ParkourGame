@@ -7,7 +7,9 @@ public class IK : MonoBehaviour
     Animator animator;
     bool ray;
     RaycastHit rayHit;
-    [SerializeField] float offsetHit;[SerializeField] float offsetHit2;
+    [SerializeField] float offsetFoot;
+    [SerializeField] float offsetWallRun;
+    [SerializeField] float offsetHand;
     [SerializeField] LayerMask layerMask;
     public bool isWallRun;
     private Vector3 leftFoot;
@@ -35,13 +37,13 @@ public class IK : MonoBehaviour
             //Left Foot
             animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot, 1);
             animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, 1);
-            ray = Physics.Raycast(animator.GetIKPosition(AvatarIKGoal.LeftFoot) + Vector3.up, Vector3.down, out rayHit,1 + offsetHit, layerMask);       
+            ray = Physics.Raycast(animator.GetIKPosition(AvatarIKGoal.LeftFoot) + Vector3.up, Vector3.down, out rayHit,1 + offsetFoot, layerMask);       
             if (ray)
             {
                 if (rayHit.collider)
                 {
                     Vector3 footPosition = rayHit.point;
-                    footPosition.y += offsetHit;
+                    footPosition.y += offsetFoot;
                     animator.SetIKPosition(AvatarIKGoal.LeftFoot, footPosition);
                     animator.SetIKRotation(AvatarIKGoal.LeftFoot, Quaternion.LookRotation(transform.forward, rayHit.normal));
                 }
@@ -49,29 +51,30 @@ public class IK : MonoBehaviour
             //Right Foot
             animator.SetIKPositionWeight(AvatarIKGoal.RightFoot, 1);
             animator.SetIKRotationWeight(AvatarIKGoal.RightFoot, 1);
-            ray = Physics.Raycast(animator.GetIKPosition(AvatarIKGoal.RightFoot) + Vector3.up, Vector3.down, out rayHit,1 + offsetHit, layerMask);         
+            ray = Physics.Raycast(animator.GetIKPosition(AvatarIKGoal.RightFoot) + Vector3.up, Vector3.down, out rayHit,1 + offsetFoot, layerMask);         
             if (ray)
             {
                 if (rayHit.collider)
                 {
                     Vector3 footPosition = rayHit.point;
-                    footPosition.y += offsetHit;
+                    footPosition.y += offsetFoot;
                     animator.SetIKPosition(AvatarIKGoal.RightFoot, footPosition);
                     animator.SetIKRotation(AvatarIKGoal.RightFoot, Quaternion.LookRotation(transform.forward, rayHit.normal));
                 }
             }
+
             if (isWallRun)
             {
                 animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot, 1);
                 animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, 1);
-                ray = Physics.Raycast(animator.GetIKPosition(AvatarIKGoal.LeftFoot) + transform.TransformDirection(leftFoot), transform.TransformDirection(rightFoot), out rayHit, 1 + offsetHit, layerMask); 
+                ray = Physics.Raycast(animator.GetIKPosition(AvatarIKGoal.LeftFoot) + transform.TransformDirection(leftFoot), transform.TransformDirection(rightFoot), out rayHit, 1 + offsetFoot, layerMask); 
                 Debug.DrawRay(animator.GetIKPosition(AvatarIKGoal.LeftFoot) + transform.TransformDirection(leftFoot), transform.TransformDirection(rightFoot),Color.green,2);
                 if (ray)
                 {
                     if (rayHit.collider)
                     {
                         Vector3 footPosition = rayHit.point;
-                        footPosition.x += offsetHit2;
+                        footPosition.x += offsetWallRun;
                         animator.SetIKPosition(AvatarIKGoal.LeftFoot, footPosition);
                         animator.SetIKRotation(AvatarIKGoal.LeftFoot, Quaternion.LookRotation(transform.forward, rayHit.normal));
                     }
@@ -79,17 +82,44 @@ public class IK : MonoBehaviour
 
                 animator.SetIKPositionWeight(AvatarIKGoal.RightFoot, 1);
                 animator.SetIKRotationWeight(AvatarIKGoal.RightFoot, 1);
-                ray = Physics.Raycast(animator.GetIKPosition(AvatarIKGoal.RightFoot) + transform.TransformDirection(leftFoot), transform.TransformDirection(rightFoot), out rayHit, 1 + offsetHit, layerMask); 
+                ray = Physics.Raycast(animator.GetIKPosition(AvatarIKGoal.RightFoot) + transform.TransformDirection(leftFoot), transform.TransformDirection(rightFoot), out rayHit, 1 + offsetFoot, layerMask); 
                 Debug.DrawRay(animator.GetIKPosition(AvatarIKGoal.RightFoot) + transform.TransformDirection(leftFoot), transform.TransformDirection(rightFoot), Color.red, 2);
                 if (ray)
                 {
                     if (rayHit.collider)
                     {
                         Vector3 footPosition = rayHit.point;
-                        footPosition.y += offsetHit2;
+                        footPosition.y += offsetWallRun;
                         animator.SetIKPosition(AvatarIKGoal.RightFoot, footPosition);
                         animator.SetIKRotation(AvatarIKGoal.RightFoot, Quaternion.LookRotation(transform.forward, rayHit.normal));
                     }
+                }
+            }
+
+            animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1);
+            animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1);
+            ray = Physics.Raycast(animator.GetIKPosition(AvatarIKGoal.LeftHand), transform.TransformDirection(Vector3.forward), out rayHit, 1 + offsetHand, layerMask);Debug.DrawRay(animator.GetIKPosition(AvatarIKGoal.LeftHand), transform.TransformDirection(Vector3.forward), Color.red, 1);
+            if (ray)
+            {
+                if (rayHit.collider)
+                {
+                    Vector3 handPosition = rayHit.point;
+                    handPosition.z += offsetHand;
+                    animator.SetIKPosition(AvatarIKGoal.LeftHand, handPosition);
+                    animator.SetIKRotation(AvatarIKGoal.LeftHand, Quaternion.LookRotation(transform.up, rayHit.normal));
+                }
+            }
+            animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
+            animator.SetIKRotationWeight(AvatarIKGoal.RightHand, 1);
+            ray = Physics.Raycast(animator.GetIKPosition(AvatarIKGoal.RightHand), transform.TransformDirection(Vector3.forward), out rayHit, 1 + offsetHand, layerMask);
+            if (ray)
+            {
+                if (rayHit.collider)
+                {
+                    Vector3 handPosition = rayHit.point;
+                    handPosition.z += offsetHand;
+                    animator.SetIKPosition(AvatarIKGoal.RightHand, handPosition);
+                    animator.SetIKRotation(AvatarIKGoal.RightHand, Quaternion.LookRotation(transform.up, rayHit.normal));
                 }
             }
         }
