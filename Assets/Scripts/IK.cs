@@ -98,7 +98,7 @@ public class IK : MonoBehaviour
 
             animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1);
             animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1);
-            ray = Physics.Raycast(animator.GetIKPosition(AvatarIKGoal.LeftHand), transform.TransformDirection(Vector3.forward), out rayHit, 1 + offsetHand, layerMask);Debug.DrawRay(animator.GetIKPosition(AvatarIKGoal.LeftHand), transform.TransformDirection(Vector3.forward), Color.red, 1);
+            ray = Physics.Raycast(animator.GetIKPosition(AvatarIKGoal.LeftHand), transform.TransformDirection(Vector3.forward), out rayHit, 1 + offsetHand, layerMask);
             if (ray)
             {
                 if (rayHit.collider)
