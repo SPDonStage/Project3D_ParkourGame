@@ -9,7 +9,6 @@ using UnityEngine.Experimental.AI;
 public class EnvironmentChecker : MonoBehaviour
 {
     private CharacterController characterController;
-    private Vector3 Yoffset_Ray = Vector3.zero;
     private float Yoffset_Ray_Length = 1.5f;
     [SerializeField] private LayerMask layerMask;
     private Vector3 originPos;
@@ -36,7 +35,7 @@ public class EnvironmentChecker : MonoBehaviour
                         Yoffset_Ray_Length, layerMask);
         if (objectData.Yoffset_Ray_Hit.collider)
         {
-            originPosDownward = objectData.Yoffset_Ray_Hit.point + (transform.forward * 0.05f) + new Vector3(0, characterController.height + .5f, 0);
+            originPosDownward = objectData.Yoffset_Ray_Hit.point + (transform.forward * 0.3f) + new Vector3(0, characterController.height + .5f, 0);
             objectData.Downward_Ray_Hit_Check = Physics.Raycast(originPosDownward, Vector3.down, out objectData.Downward_Ray_Hit, characterController.height + .5f, layerMask);
             objectData.rotationToRotate = objectData.Yoffset_Ray_Hit.point - originPos;
             objectData.angleFacingToWall = Vector3.Angle(transform.forward, -objectData.Yoffset_Ray_Hit.normal);
@@ -48,10 +47,10 @@ public class EnvironmentChecker : MonoBehaviour
         objectData = new ObjectData();
         originPos = transform.position;
         objectData.Yoffset_Ray_Hit_Check = Physics.Raycast(originPos, transform.forward, out objectData.Yoffset_Ray_Hit,
-                        Yoffset_Ray_Length, layerMask);
+                        Yoffset_Ray_Length, layerMask); Debug.DrawRay(originPos, transform.forward, Color.gray);
         if (objectData.Yoffset_Ray_Hit.collider)
         {
-            originPosDownward = objectData.Yoffset_Ray_Hit.point + (transform.forward * 0.05f) + new Vector3(0, characterController.height + .5f, 0);
+            originPosDownward = objectData.Yoffset_Ray_Hit.point + (transform.forward * 0.3f) + new Vector3(0, characterController.height + .5f, 0);
             objectData.Downward_Ray_Hit_Check = Physics.Raycast(originPosDownward, Vector3.down, out objectData.Downward_Ray_Hit, characterController.height + .5f, layerMask);
             Gizmos.color = Color.blue; 
             Gizmos.DrawRay(transform.position, objectData.Yoffset_Ray_Hit.point);
@@ -80,6 +79,6 @@ public class EnvironmentChecker : MonoBehaviour
         public RaycastHit Yoffset_Ray_Hit;
         public RaycastHit Downward_Ray_Hit;
         public Vector3 rotationToRotate;
-        public float angleFacingToWall;
+        public float angleFacingToWall; //use for wall run
     }
 }

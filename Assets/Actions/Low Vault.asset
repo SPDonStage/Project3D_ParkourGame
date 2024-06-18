@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animationName: Low Vault
   minHeight: 0.1
-  maxHeight: 0.8
-  isLookAtObstacle: 1
-  checkHeight: 2.228229
+  maxHeight: 0.95
+  isUseSpineHeight: 0
+  checkHeight: 2.4450002
   isMatching: 1
   avatarTarget: 3
-  startTimeMatching: 0.35
-  endTimeMatching: 1
-  positionHeight: {x: 0, y: 1, z: 0}
+  startTimeMatching: 0.3
+  endTimeMatching: 0.5
+  positionHeight: {x: 0, y: 1, z: 1}

@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Climb Wall
   m_EditorClassIdentifier: 
   animationName: Climb Wall
-  minHeight: 1.8
-  maxHeight: 2.5
-  isLookAtObstacle: 1
-  checkHeight: 2.3283658
+  minHeight: 0.1
+  maxHeight: 3
+  isUseSpineHeight: 1
+  checkHeight: 0.3320768
   isMatching: 1
   avatarTarget: 5
-  startTimeMatching: 0.08
-  endTimeMatching: 0.8
-  positionHeight: {x: 0, y: 0, z: 0}
+  startTimeMatching: 0.18
+  endTimeMatching: 0.45
+  positionHeight: {x: 0, y: 1, z: 1}
