@@ -31,7 +31,7 @@ public class EnvironmentChecker : MonoBehaviour
     {
         objectData = new ObjectData();
         originPos = transform.position;
-        objectData.Yoffset_Ray_Hit_Check = Physics.Raycast(originPos, transform.forward, out objectData.Yoffset_Ray_Hit,
+        objectData.Yoffset_Ray_Hit_Check = Physics.SphereCast(originPos, 0.05f, transform.forward, out objectData.Yoffset_Ray_Hit,
                         Yoffset_Ray_Length, layerMask);
         if (objectData.Yoffset_Ray_Hit.collider)
         {
@@ -46,8 +46,8 @@ public class EnvironmentChecker : MonoBehaviour
     {
         objectData = new ObjectData();
         originPos = transform.position;
-        objectData.Yoffset_Ray_Hit_Check = Physics.Raycast(originPos, transform.forward, out objectData.Yoffset_Ray_Hit,
-                        Yoffset_Ray_Length, layerMask); Debug.DrawRay(originPos, transform.forward, Color.gray);
+        objectData.Yoffset_Ray_Hit_Check = Physics.SphereCast(originPos, 0.05f, transform.forward, out objectData.Yoffset_Ray_Hit,
+                        Yoffset_Ray_Length, layerMask); Debug.DrawRay(originPos, transform.forward, Color.gray); Gizmos.DrawSphere(originPos, 0.05f);
         if (objectData.Yoffset_Ray_Hit.collider)
         {
             originPosDownward = objectData.Yoffset_Ray_Hit.point + (transform.forward * 0.3f) + new Vector3(0, characterController.height + .5f, 0);

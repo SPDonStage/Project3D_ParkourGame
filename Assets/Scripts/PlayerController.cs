@@ -128,6 +128,7 @@ public class PlayerController : MonoBehaviour
     }
     private void FixedUpdate()
     {
+      
         //Vault
         if (!isInAction)
         {
@@ -191,7 +192,7 @@ public class PlayerController : MonoBehaviour
                     {
                         onJumping = true;
                         Physics.gravity = new Vector3(0, -9.8f, 0);
-                        //   animator.CrossFade("On Air", 0.2f);
+                           animator.CrossFade("On Air", 0.2f);
                         characterController.center = new Vector3(0, 1.1f, 0);
                         characterController.height = 2.2f;
                         //wall running
@@ -246,16 +247,17 @@ public class PlayerController : MonoBehaviour
                 if (state == CharacterState.Jump)
                 {
                     // Debug.Log(environmentChecker.checkData().angleFacingToWall);
-                    if (environmentChecker.checkData().angleFacingToWall > 45) //restrict angle
+                    if (environmentChecker.checkData().angleFacingToWall > 60) //restrict angle
                     {
                         canWallRunning = true;
+                        onJumping = false;
                     }
                     else
                     {
                         onJumping = true;
                         canWallRunning = false;
                     }
-                    if (environmentChecker.checkData().angleFacingToWall <= 45)
+                    if (environmentChecker.checkData().angleFacingToWall <= 60)
                     {
                         if (environmentChecker.checkData().Yoffset_Ray_Hit_Check)
                         {
@@ -267,23 +269,23 @@ public class PlayerController : MonoBehaviour
                         }
                     }
                 }
-                else
+                if (state == CharacterState.Ground)
                 {
                     canJump = true;
                     onJumping = true;
-                    //   modifiedJumpVector3 = Vector3.zero;
+                       modifiedJumpVector3 = Vector3.zero;
                 }
                 if (state == CharacterState.WallRunning)
                 {
                     onJumping = true;
-                    canWallRunning = false;
+                    canJump = true;                
                 }
             }
         }
     }
     void Jump()
     {
-        //   Debug.Log("asasass");
+      //     Debug.Log("asasass");
         groundDetectorVector3 = new Vector3(groundDetector.position.x, groundDetector.position.y, groundDetector.position.z);
         Physics.Raycast(groundDetectorVector3, Vector3.down, out var checkGround, 0.3f, groundLayer);
         if (checkGround.collider || state == CharacterState.WallRunning)
@@ -411,23 +413,29 @@ public class PlayerController : MonoBehaviour
         Physics.Raycast(transform.position, -transform.right, out RaycastHit checkLeft_Ray, 1f, wallRunningLayerMask);
         if (checkRight_Ray.collider)
         {
-            animator.MatchTarget(checkRight_Ray.point, transform.rotation, AvatarTarget.RightFoot, new MatchTargetWeightMask(Vector3.zero, 0), 0, 0.3f);
+        //    animator.MatchTarget(checkRight_Ray.point, transform.rotation, AvatarTarget.RightFoot, new MatchTargetWeightMask(Vector3.zero, 0), 0, 0.3f);
             animator.SetBool("isWallRunningRight", true);
             SwitchCharacterStateAnimation(state = CharacterState.WallRunning);
             wallRunningVector3 = Vector3.Cross(checkRight_Ray.normal, Vector3.up);
-            modifiedJumpVector3 = (Vector3.forward + Vector3.left) * speed;
+            modifiedJumpVector3 = Vector3.left * speed;
             GetComponent<IK>().isWallRun = true;
             GetComponent<IK>().SetFootRay(Vector3.left, Vector3.right);
+            virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.Value = 
+                Mathf.Lerp(virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.Value, 200, 5 * Time.deltaTime);
+            virtualCamera.GetComponent<CinemachineInputProvider>().enabled = false;
         }
         if (checkLeft_Ray.collider)
         {
-            animator.MatchTarget(checkLeft_Ray.point, transform.rotation, AvatarTarget.LeftFoot, new MatchTargetWeightMask(Vector3.zero, 0), 0, 0.3f);
+       //     animator.MatchTarget(checkLeft_Ray.point, transform.rotation, AvatarTarget.LeftFoot, new MatchTargetWeightMask(Vector3.zero, 0), 0, 0.3f);
             animator.SetBool("isWallRunningLeft", true);
             SwitchCharacterStateAnimation(state = CharacterState.WallRunning);
             wallRunningVector3 = Vector3.Cross(checkLeft_Ray.normal, Vector3.up);
-            modifiedJumpVector3 = (Vector3.forward + Vector3.right) * speed;
+            modifiedJumpVector3 = Vector3.right * speed;
             GetComponent<IK>().isWallRun = true;
             GetComponent<IK>().SetFootRay(Vector3.right, Vector3.left);
+            virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.Value =
+                Mathf.Lerp(virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.Value, 200, 5 * Time.deltaTime);
+            virtualCamera.GetComponent<CinemachineInputProvider>().enabled = false;
         }
         if (!checkLeft_Ray.collider && !checkRight_Ray.collider) //cancel wall running state
         {
@@ -435,6 +443,7 @@ public class PlayerController : MonoBehaviour
             modifiedJumpVector3 = Vector3.forward * speed;
             canWallRunning = false;
             GetComponent<IK>().isWallRun = false;
+            virtualCamera.GetComponent<CinemachineInputProvider>().enabled = true;
         }
         if ((transform.forward - wallRunningVector3).sqrMagnitude > (transform.forward - -wallRunningVector3).sqrMagnitude) //check if change direction
         {

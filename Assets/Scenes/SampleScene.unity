@@ -689,7 +689,7 @@ Transform:
   - {fileID: 36969884}
   - {fileID: 1722595913}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -0.06, y: 0, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1667,7 +1667,7 @@ Transform:
   m_Children:
   - {fileID: 788693394}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0.11, z: 0}
+  m_LocalEulerAnglesHint: {x: -0.34, y: 0, z: 0}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
