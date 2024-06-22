@@ -80,13 +80,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private List<NewParkourAction> newParkourActions;
     NewParkourAction parkourAction; //to store which parkour action for target matching
     private EnvironmentChecker environmentChecker;
-    [SerializeField]private bool isInAction = false;
+    [SerializeField] private bool isInAction = false;
     [SerializeField] private Transform spineHeight;
     #endregion
     //Wall Running
     [Header("---Wall Running---")]
     #region
-    [SerializeField]private bool canWallRunning = false;
+    [SerializeField] private bool canWallRunning = false;
     private Vector3 wallRunningVector3;
     [SerializeField] private LayerMask wallRunningLayerMask;
     #endregion
@@ -116,7 +116,7 @@ public class PlayerController : MonoBehaviour
         jumpForce = jumpForceValue;
         SwitchCharacterStateAnimation(state);
     }
-   // NewParkourAction action;
+    // NewParkourAction action;
     // Update is called once per frame
     void Update()
     {
@@ -129,6 +129,16 @@ public class PlayerController : MonoBehaviour
         if (animator.GetCurrentAnimatorStateInfo(0).IsName(parkourAction.AnimationName) && isInAction)
         {
             TargetMatching(parkourAction);
+        }
+    }
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit.collider.CompareTag("Ground"))
+        {
+            if (characterController.collisionFlags == CollisionFlags.Above) //check headshot
+            {
+                Debug.Log("Headshot");
+            }
         }
     }
     private void FixedUpdate()
@@ -149,8 +159,8 @@ public class PlayerController : MonoBehaviour
         {
             if (environmentChecker.checkData().Yoffset_Ray_Hit_Check && state == CharacterState.Ground)
             {
-                if (playerInput.Player.Jump.ReadValue<float>() == 1) 
-                { 
+                if (playerInput.Player.Jump.ReadValue<float>() == 1)
+                {
                     foreach (var action in newParkourActions)
                     {
                         if (action.checkIfAvailable(environmentChecker.checkData(), transform, spineHeight)) //check which action available
@@ -164,7 +174,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-          
+
             if (onJumping)
             {
                 Jump();
@@ -197,7 +207,7 @@ public class PlayerController : MonoBehaviour
                     {
                         onJumping = true;
                         Physics.gravity = new Vector3(0, -9.8f, 0);
-                           animator.CrossFade("On Air", 0.2f);
+                        animator.CrossFade("On Air", 0.2f);
                         characterController.center = jumpCollider;
                         characterController.height = 1.45f;
                         //wall running
@@ -348,7 +358,7 @@ public class PlayerController : MonoBehaviour
             else
             {
                 animator.SetBool("isSliding", false);
-            }          
+            }
         }
         if (context.canceled)
         {
@@ -387,8 +397,8 @@ public class PlayerController : MonoBehaviour
                 isSlopeSliding = true;
                 if (slopeSlidingDirectionAngle < 0) //Upward Direction
                 {
-                   // animator.CrossFade("Running Slide Upward", 0.2f);
-                   // SwitchCharacterStateAnimation(CharacterState.Ground);
+                    // animator.CrossFade("Running Slide Upward", 0.2f);
+                    // SwitchCharacterStateAnimation(CharacterState.Ground);
                 }
                 else //Downward Direction
                 {
@@ -428,7 +438,7 @@ public class PlayerController : MonoBehaviour
         SwitchCharacterStateAnimation(state = CharacterState.Vault);
         animator.CrossFade(newParkourAction.AnimationName, .2f);
         parkourAction = newParkourAction;
-        yield return null; 
+        yield return null;
         yield return new WaitForSeconds(animator.GetNextAnimatorStateInfo(0).length);
         SwitchCharacterStateAnimation(state = CharacterState.Ground);
         isInAction = false;
@@ -453,7 +463,7 @@ public class PlayerController : MonoBehaviour
             //IK
             GetComponent<IK>().isWallRun = true;
             GetComponent<IK>().SetFootRay(Vector3.left, Vector3.right);
-            
+
         }
         if (checkLeft_Ray.collider)
         {
