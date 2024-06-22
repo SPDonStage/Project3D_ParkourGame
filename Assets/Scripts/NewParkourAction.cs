@@ -24,6 +24,10 @@ public class NewParkourAction : ScriptableObject
         //      Debug.Log("ray:" + objectData.Downward_Ray_Hit.point.y);
         //    Debug.Log("player:" + player.position.y); Debug.Log("height:" + checkHeight);
         // checkHeight = player.position.y < 0 ? Mathf.Abs(objectData.Downward_Ray_Hit.point.y + player.position.y) : objectData.Downward_Ray_Hit.point.y - player.position.y ;Debug.Log("height:"+checkHeight);
+        if (matchPosition.y  > player.position.y)
+        {
+            Debug.Log("zzz");
+        }
         if (isUseSpineHeight)
         {
             checkHeight = player.position.y < 0 ? Mathf.Abs(objectData.Downward_Ray_Hit.point.y - spineHeight.position.y)

@@ -7,6 +7,7 @@ public class IK : MonoBehaviour
     Animator animator;
     bool ray;
     RaycastHit rayHit;
+    [SerializeField] float weight;
     [SerializeField] float offsetFoot;
     [SerializeField] float offsetWallRun;
     [SerializeField] float offsetHand;
@@ -35,9 +36,9 @@ public class IK : MonoBehaviour
         if (animator)
         {
             //Left Foot
-            animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot, 1);
-            animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, 1);
-            ray = Physics.Raycast(animator.GetIKPosition(AvatarIKGoal.LeftFoot) + Vector3.up, Vector3.down, out rayHit,1 + offsetFoot, layerMask);       
+            animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot, weight);
+            animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, weight);
+            ray = Physics.Raycast(animator.GetIKPosition(AvatarIKGoal.LeftFoot) + Vector3.up, Vector3.down, out rayHit,weight + offsetFoot, layerMask);       
             if (ray)
             {
                 if (rayHit.collider)
@@ -49,9 +50,9 @@ public class IK : MonoBehaviour
                 }
             }           
             //Right Foot
-            animator.SetIKPositionWeight(AvatarIKGoal.RightFoot, 1);
-            animator.SetIKRotationWeight(AvatarIKGoal.RightFoot, 1);
-            ray = Physics.Raycast(animator.GetIKPosition(AvatarIKGoal.RightFoot) + Vector3.up, Vector3.down, out rayHit,1 + offsetFoot, layerMask);         
+            animator.SetIKPositionWeight(AvatarIKGoal.RightFoot, weight);
+            animator.SetIKRotationWeight(AvatarIKGoal.RightFoot, weight);
+            ray = Physics.Raycast(animator.GetIKPosition(AvatarIKGoal.RightFoot) + Vector3.up, Vector3.down, out rayHit,weight + offsetFoot, layerMask);         
             if (ray)
             {
                 if (rayHit.collider)
@@ -65,9 +66,9 @@ public class IK : MonoBehaviour
 
             if (isWallRun)
             {
-                animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot, 1);
-                animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, 1);
-                ray = Physics.Raycast(animator.GetIKPosition(AvatarIKGoal.LeftFoot) + transform.TransformDirection(leftFoot), transform.TransformDirection(rightFoot), out rayHit, 1 + offsetFoot, layerMask); 
+                animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot, weight);
+                animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, weight);
+                ray = Physics.Raycast(animator.GetIKPosition(AvatarIKGoal.LeftFoot) + transform.TransformDirection(leftFoot), transform.TransformDirection(rightFoot), out rayHit, weight + offsetFoot, layerMask); 
                 Debug.DrawRay(animator.GetIKPosition(AvatarIKGoal.LeftFoot) + transform.TransformDirection(leftFoot), transform.TransformDirection(rightFoot),Color.green,2);
                 if (ray)
                 {
@@ -80,9 +81,9 @@ public class IK : MonoBehaviour
                     }
                 }
 
-                animator.SetIKPositionWeight(AvatarIKGoal.RightFoot, 1);
-                animator.SetIKRotationWeight(AvatarIKGoal.RightFoot, 1);
-                ray = Physics.Raycast(animator.GetIKPosition(AvatarIKGoal.RightFoot) + transform.TransformDirection(leftFoot), transform.TransformDirection(rightFoot), out rayHit, 1 + offsetFoot, layerMask); 
+                animator.SetIKPositionWeight(AvatarIKGoal.RightFoot, weight);
+                animator.SetIKRotationWeight(AvatarIKGoal.RightFoot, weight);
+                ray = Physics.Raycast(animator.GetIKPosition(AvatarIKGoal.RightFoot) + transform.TransformDirection(leftFoot), transform.TransformDirection(rightFoot), out rayHit, weight + offsetFoot, layerMask); 
                 Debug.DrawRay(animator.GetIKPosition(AvatarIKGoal.RightFoot) + transform.TransformDirection(leftFoot), transform.TransformDirection(rightFoot), Color.red, 2);
                 if (ray)
                 {
@@ -96,32 +97,32 @@ public class IK : MonoBehaviour
                 }
             }
 
-            animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1);
-            animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1);
-            ray = Physics.Raycast(animator.GetIKPosition(AvatarIKGoal.LeftHand), transform.TransformDirection(Vector3.forward), out rayHit, 1 + offsetHand, layerMask);
-            if (ray)
-            {
-                if (rayHit.collider)
-                {
-                    Vector3 handPosition = rayHit.point;
-                    handPosition.z += offsetHand;
-                    animator.SetIKPosition(AvatarIKGoal.LeftHand, handPosition);
-                    animator.SetIKRotation(AvatarIKGoal.LeftHand, Quaternion.LookRotation(transform.up, rayHit.normal));
-                }
-            }
-            animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
-            animator.SetIKRotationWeight(AvatarIKGoal.RightHand, 1);
-            ray = Physics.Raycast(animator.GetIKPosition(AvatarIKGoal.RightHand), transform.TransformDirection(Vector3.forward), out rayHit, 1 + offsetHand, layerMask);
-            if (ray)
-            {
-                if (rayHit.collider)
-                {
-                    Vector3 handPosition = rayHit.point;
-                    handPosition.z += offsetHand;
-                    animator.SetIKPosition(AvatarIKGoal.RightHand, handPosition);
-                    animator.SetIKRotation(AvatarIKGoal.RightHand, Quaternion.LookRotation(transform.up, rayHit.normal));
-                }
-            }
+            //animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, weight);
+            //animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, weight);
+            //ray = Physics.Raycast(animator.GetIKPosition(AvatarIKGoal.LeftHand), transform.TransformDirection(Vector3.forward), out rayHit, .01f + offsetHand, layerMask);
+            //if (ray)
+            //{
+            //    if (rayHit.collider)
+            //    {
+            //        Vector3 handPosition = rayHit.point;
+            //        handPosition.z += offsetHand;
+            //        animator.SetIKPosition(AvatarIKGoal.LeftHand, handPosition);
+            //        animator.SetIKRotation(AvatarIKGoal.LeftHand, Quaternion.LookRotation(transform.up, rayHit.normal));
+            //    }
+            //}
+            //animator.SetIKPositionWeight(AvatarIKGoal.RightHand, weight);
+            //animator.SetIKRotationWeight(AvatarIKGoal.RightHand, weight);
+            //ray = Physics.Raycast(animator.GetIKPosition(AvatarIKGoal.RightHand), transform.TransformDirection(Vector3.forward), out rayHit, .01f + offsetHand, layerMask);
+            //if (ray)
+            //{
+            //    if (rayHit.collider)
+            //    {
+            //        Vector3 handPosition = rayHit.point;
+            //        handPosition.z += offsetHand;
+            //        animator.SetIKPosition(AvatarIKGoal.RightHand, handPosition);
+            //        animator.SetIKRotation(AvatarIKGoal.RightHand, Quaternion.LookRotation(transform.up, rayHit.normal));
+            //    }
+            //}
         }
     }
     public void SetDirection(Vector3 direction)

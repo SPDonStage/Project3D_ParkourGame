@@ -22,29 +22,27 @@ public class ObjectReview : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Physics.Raycast(checkGround.transform.position, -transform.up, out RaycastHit checkIsGrounded, .05f, layerMask);
+        Physics.Raycast(checkGround.transform.position, -transform.up, out RaycastHit checkIsGrounded, .1f, layerMask);
         if (checkIsGrounded.collider)
             isGrounded = true;
         if (isCollided || !isGrounded)
         {
-            errorGameObject.SetActive(true);
+            errorGameObject.SetActive(true); 
             reviewGameObject.SetActive(false);
 
         }
-        else
+        if (isGrounded)
         {
-            if (isGrounded)
-            {
-                errorGameObject.SetActive(false);
-                reviewGameObject.SetActive(true);
-            }
+            
+            errorGameObject.SetActive(false);
+            reviewGameObject.SetActive(true);
         }
     }
     private void OnCollisionStay(Collision collision)
     {
         if (collision.collider)
         {          
-            isCollided = true;
+        //    isCollided = true;
         }
        
        

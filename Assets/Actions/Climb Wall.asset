@@ -16,7 +16,7 @@ MonoBehaviour:
   minHeight: 0.1
   maxHeight: 3
   isUseSpineHeight: 1
-  checkHeight: 0.3320768
+  checkHeight: 0.06422913
   isMatching: 1
   avatarTarget: 5
   startTimeMatching: 0.18

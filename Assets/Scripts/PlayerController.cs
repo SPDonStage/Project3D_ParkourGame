@@ -24,6 +24,11 @@ public class PlayerController : MonoBehaviour
     //
     [Header("---Player Setting---")]
     #region
+    //Collider Height
+    [SerializeField] private Vector3 groundCollider;
+    [SerializeField] private Vector3 jumpCollider;
+    [SerializeField] private Vector3 crouchCollider;
+    //
     [SerializeField] private CharacterState state;
     [SerializeField] private float speed;
     [SerializeField] private float speedMouse;
@@ -75,13 +80,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private List<NewParkourAction> newParkourActions;
     NewParkourAction parkourAction; //to store which parkour action for target matching
     private EnvironmentChecker environmentChecker;
-    private bool isInAction = false;
+    [SerializeField]private bool isInAction = false;
     [SerializeField] private Transform spineHeight;
     #endregion
     //Wall Running
     [Header("---Wall Running---")]
     #region
-    private bool canWallRunning = false;
+    [SerializeField]private bool canWallRunning = false;
     private Vector3 wallRunningVector3;
     [SerializeField] private LayerMask wallRunningLayerMask;
     #endregion
@@ -115,9 +120,9 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!isInAction)
+        if (!isInAction && !canWallRunning)
         {
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.AngleAxis(camera.transform.rotation.eulerAngles.y, Vector3.up), speedMouse * Time.fixedDeltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.AngleAxis(camera.transform.rotation.eulerAngles.y, Vector3.up), speedMouse * 5 * Time.fixedDeltaTime);
         }
         if (!canWallRunning)
             animator.applyRootMotion = true;
@@ -128,7 +133,17 @@ public class PlayerController : MonoBehaviour
     }
     private void FixedUpdate()
     {
-      
+        if (canWallRunning)
+        {
+            WallRun();
+        }
+        //   if (state != CharacterState.Vault && state == CharacterState.Ground)
+        //       onJumping = true;      
+        Movement();
+        //   Crouch();
+        //Slide();
+        SlopeSlide();
+        AntiStandingOnSlope();
         //Vault
         if (!isInAction)
         {
@@ -149,17 +164,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            if (canWallRunning)
-            {
-                WallRun();
-            }
-            //   if (state != CharacterState.Vault && state == CharacterState.Ground)
-            //       onJumping = true;      
-            Movement();
-            //   Crouch();
-            Slide();
-            SlopeSlide();
-            AntiStandingOnSlope();
+          
             if (onJumping)
             {
                 Jump();
@@ -172,8 +177,8 @@ public class PlayerController : MonoBehaviour
         {
             case CharacterState.Ground:
                 {
-                    characterController.center = new Vector3(0, 1.85f, 0);
-                    characterController.height = 3.6f;
+                    characterController.center = groundCollider;
+                    characterController.height = 1.45f;
                     animator.applyRootMotion = true;
                     break;
                 }
@@ -181,8 +186,8 @@ public class PlayerController : MonoBehaviour
                 {
                     // slopeSlideSpeed = 0;
 
-                    characterController.center = new Vector3(0, 1.1f, 0);
-                    characterController.height = 2.2f;
+                    characterController.center = crouchCollider;
+                    characterController.height = 1.1f;
                     break;
                 }
             case CharacterState.Jump:
@@ -193,8 +198,8 @@ public class PlayerController : MonoBehaviour
                         onJumping = true;
                         Physics.gravity = new Vector3(0, -9.8f, 0);
                            animator.CrossFade("On Air", 0.2f);
-                        characterController.center = new Vector3(0, 1.1f, 0);
-                        characterController.height = 2.2f;
+                        characterController.center = jumpCollider;
+                        characterController.height = 1.45f;
                         //wall running
                         animator.SetBool("isWallRunningRight", false);
                         animator.SetBool("isWallRunningLeft", false);
@@ -213,7 +218,6 @@ public class PlayerController : MonoBehaviour
                     {
                         slopeSlideSpeed = slopeSlidingSpeedValueInput;
                     }
-
                     break;
                 }
             case CharacterState.WallRunning:
@@ -246,8 +250,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (state == CharacterState.Jump)
                 {
-                    // Debug.Log(environmentChecker.checkData().angleFacingToWall);
-                    if (environmentChecker.checkData().angleFacingToWall > 60) //restrict angle
+                    if (environmentChecker.checkData().angleFacingToWall > 30) //restrict angle
                     {
                         canWallRunning = true;
                         onJumping = false;
@@ -255,15 +258,13 @@ public class PlayerController : MonoBehaviour
                     else
                     {
                         onJumping = true;
-                        canWallRunning = false;
                     }
-                    if (environmentChecker.checkData().angleFacingToWall <= 60)
+                    if (environmentChecker.checkData().angleFacingToWall <= 30)
                     {
                         if (environmentChecker.checkData().Yoffset_Ray_Hit_Check)
                         {
                             if (newParkourActions[0].checkIfAvailable(environmentChecker.checkData(), transform, spineHeight))
                             {
-                                Debug.Log("z");
                                 StartCoroutine(VaultOverObstacle(newParkourActions[0])); //newParkourActions[0] is climb wall action
                             }
                         }
@@ -273,22 +274,20 @@ public class PlayerController : MonoBehaviour
                 {
                     canJump = true;
                     onJumping = true;
-                       modifiedJumpVector3 = Vector3.zero;
                 }
                 if (state == CharacterState.WallRunning)
                 {
                     onJumping = true;
-                    canJump = true;                
+                    canJump = true;
                 }
             }
         }
     }
     void Jump()
     {
-      //     Debug.Log("asasass");
         groundDetectorVector3 = new Vector3(groundDetector.position.x, groundDetector.position.y, groundDetector.position.z);
         Physics.Raycast(groundDetectorVector3, Vector3.down, out var checkGround, 0.3f, groundLayer);
-        if (checkGround.collider || state == CharacterState.WallRunning)
+        if (checkGround.collider)
         {
             if (checkGround.collider)
             {
@@ -296,13 +295,26 @@ public class PlayerController : MonoBehaviour
             }
             if (playerInput.Player.Crouch.ReadValue<float>() == 0)
             {
-                SwitchCharacterStateAnimation(state = CharacterState.Ground);
-                animator.SetBool("Jump", false);
+                if (state == CharacterState.WallRunning)
+                {
+                    animator.SetBool("isWallRunningRight", false);
+                    animator.SetBool("isWallRunningLeft", false);
+                }
+                else
+                {
+                    SwitchCharacterStateAnimation(state = CharacterState.Ground);
+                    animator.SetBool("Jump", false);
+                }
                 jumpHeightVector3.x = Mathf.Lerp(jumpHeightVector3.x, 0, speed * Time.fixedDeltaTime);
                 jumpHeightVector3.z = Mathf.Lerp(jumpHeightVector3.z, 0, speed * Time.fixedDeltaTime);
-                //     gravity = playerInput.Player.Jump.ReadValue<float>() == 1 ? Physics.gravity.y : 0;
-                jumpHeightVector3.y = canJump ? jumpForce : Physics.gravity.y;  //set jumpforce
-
+                if (canWallRunning)
+                {
+                    jumpHeightVector3.y = canJump ? jumpForce / 2 : Physics.gravity.y;  //set jumpforce
+                }
+                else
+                {
+                    jumpHeightVector3.y = canJump ? jumpForce : Physics.gravity.y;  //set jumpforce
+                }
             }
         }
         else if (!checkGround.collider)
@@ -312,7 +324,7 @@ public class PlayerController : MonoBehaviour
             SwitchCharacterStateAnimation(state = CharacterState.Jump);
             jumpHeightVector3.x = Mathf.Clamp(jumpHeightVector3.x, -5.5f, 5.5f);
             jumpHeightVector3.z = Mathf.Clamp(jumpHeightVector3.z, -5.5f, 5.5f);
-            jumpHeightVector3 += (vector3Movement + 5 * modifiedJumpVector3) * jumpMoveSpeed * Time.fixedDeltaTime;   //movement on air; //modifiedVector3 to add direction on jumping
+            jumpHeightVector3 += (vector3Movement + 5 * modifiedJumpVector3) * jumpMoveSpeed * Time.fixedDeltaTime;   //movement on air; //modifiedVector3 to add side direction on jumping
         }
         jumpHeightVector3.y += Physics.gravity.y * Time.fixedDeltaTime;
         characterController.Move(transform.TransformDirection(jumpHeightVector3) * Time.fixedDeltaTime);
@@ -323,23 +335,43 @@ public class PlayerController : MonoBehaviour
         {
             SwitchCharacterStateAnimation(state = CharacterState.Crouch);
             animator.SetBool("isCrouching", true);
+            if (playerInput.Player.Sprint.ReadValue<float>() == 1 && vector3Movement.z > 0)
+            {
+                SwitchCharacterStateAnimation(state = CharacterState.Slide);
+                animator.SetBool("isSliding", true);
+                if (slopeSlidingDirectionAngle < 0 && slopeAngle != 90) //slopeAngle = 90 => on flat ground
+                {
+                    animator.CrossFade("Running Slide Upward", 0.2f);
+                    SwitchCharacterStateAnimation(CharacterState.Ground);
+                }
+            }
+            else
+            {
+                animator.SetBool("isSliding", false);
+            }          
         }
         if (context.canceled)
         {
             animator.SetBool("isCrouching", false);
+            if (state == CharacterState.Slide)
+            {
+                animator.SetBool("isSliding", false);
+            }
         }
     }
-    void Slide()
+    public void isSlidingOff() //use for event in animation
     {
-        if (playerInput.Player.Crouch.ReadValue<float>() == 1 && playerInput.Player.Sprint.ReadValue<float>() == 1 && vector3Movement.z > 0)
-        {
-            SwitchCharacterStateAnimation(state = CharacterState.Slide);
-            animator.SetBool("isSliding", true);
-        }
-        else
-        {
-            animator.SetBool("isSliding", false);
-        }
+        animator.SetBool("isSliding", false);
+        SwitchCharacterStateAnimation(state = CharacterState.Crouch);
+        //if (playerInput.Player.Crouch.ReadValue<float>() == 1 && playerInput.Player.Sprint.ReadValue<float>() == 1 && vector3Movement.z > 0)
+        //{
+        //    SwitchCharacterStateAnimation(state = CharacterState.Slide);
+        //    animator.SetBool("isSliding", true);
+        //}
+        //else
+        //{
+        //    animator.SetBool("isSliding", false);
+        //}
     }
     void SlopeSlide() //use character controller movement for slope sliding
     {
@@ -355,9 +387,8 @@ public class PlayerController : MonoBehaviour
                 isSlopeSliding = true;
                 if (slopeSlidingDirectionAngle < 0) //Upward Direction
                 {
-                    slopeSlideSpeed = Mathf.Lerp(slopeSlideSpeed, 0, slopeSlideSpeed / 2 * Time.fixedDeltaTime);
-                    animator.applyRootMotion = false;
-                    animator.CrossFade("Running Slide Upward", 0.2f);
+                   // animator.CrossFade("Running Slide Upward", 0.2f);
+                   // SwitchCharacterStateAnimation(CharacterState.Ground);
                 }
                 else //Downward Direction
                 {
@@ -413,29 +444,28 @@ public class PlayerController : MonoBehaviour
         Physics.Raycast(transform.position, -transform.right, out RaycastHit checkLeft_Ray, 1f, wallRunningLayerMask);
         if (checkRight_Ray.collider)
         {
-        //    animator.MatchTarget(checkRight_Ray.point, transform.rotation, AvatarTarget.RightFoot, new MatchTargetWeightMask(Vector3.zero, 0), 0, 0.3f);
+            animator.MatchTarget(checkRight_Ray.point, transform.rotation, AvatarTarget.RightFoot, new MatchTargetWeightMask(Vector3.zero, 0), 0, 0.3f);
+            if (canJump)
+                modifiedJumpVector3 += Vector3.left * speed / 2; //change side direction
             animator.SetBool("isWallRunningRight", true);
             SwitchCharacterStateAnimation(state = CharacterState.WallRunning);
-            wallRunningVector3 = Vector3.Cross(checkRight_Ray.normal, Vector3.up);
-            modifiedJumpVector3 = Vector3.left * speed;
+            wallRunningVector3 = Vector3.Cross(checkRight_Ray.normal, Vector3.up); //get direction
+            //IK
             GetComponent<IK>().isWallRun = true;
             GetComponent<IK>().SetFootRay(Vector3.left, Vector3.right);
-            virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.Value = 
-                Mathf.Lerp(virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.Value, 200, 5 * Time.deltaTime);
-            virtualCamera.GetComponent<CinemachineInputProvider>().enabled = false;
+            
         }
         if (checkLeft_Ray.collider)
         {
-       //     animator.MatchTarget(checkLeft_Ray.point, transform.rotation, AvatarTarget.LeftFoot, new MatchTargetWeightMask(Vector3.zero, 0), 0, 0.3f);
+            animator.MatchTarget(checkLeft_Ray.point, transform.rotation, AvatarTarget.LeftFoot, new MatchTargetWeightMask(Vector3.zero, 0), 0, 0.3f);
+            if (canJump)
+                modifiedJumpVector3 = Vector3.right * speed / 2; //change side direction
             animator.SetBool("isWallRunningLeft", true);
             SwitchCharacterStateAnimation(state = CharacterState.WallRunning);
-            wallRunningVector3 = Vector3.Cross(checkLeft_Ray.normal, Vector3.up);
-            modifiedJumpVector3 = Vector3.right * speed;
+            wallRunningVector3 = Vector3.Cross(checkLeft_Ray.normal, Vector3.up); //get direction
+            //IK                                                                
             GetComponent<IK>().isWallRun = true;
             GetComponent<IK>().SetFootRay(Vector3.right, Vector3.left);
-            virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.Value =
-                Mathf.Lerp(virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.Value, 200, 5 * Time.deltaTime);
-            virtualCamera.GetComponent<CinemachineInputProvider>().enabled = false;
         }
         if (!checkLeft_Ray.collider && !checkRight_Ray.collider) //cancel wall running state
         {
@@ -443,7 +473,6 @@ public class PlayerController : MonoBehaviour
             modifiedJumpVector3 = Vector3.forward * speed;
             canWallRunning = false;
             GetComponent<IK>().isWallRun = false;
-            virtualCamera.GetComponent<CinemachineInputProvider>().enabled = true;
         }
         if ((transform.forward - wallRunningVector3).sqrMagnitude > (transform.forward - -wallRunningVector3).sqrMagnitude) //check if change direction
         {
