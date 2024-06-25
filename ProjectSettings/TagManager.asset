@@ -8,6 +8,7 @@ TagManager:
   - Obstacle
   - Running Wall
   - ATM Card
+  - Cash
   layers:
   - Default
   - TransparentFX

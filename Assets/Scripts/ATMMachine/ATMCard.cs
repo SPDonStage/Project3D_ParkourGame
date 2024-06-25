@@ -7,6 +7,7 @@ public class ATMCard : MonoBehaviour
 {
     [SerializeField] private bool isDropped;
     [SerializeField] private GameObject auraHitbox;
+    [SerializeField] private GameObject gameObjectRotation;
     private Transform itemHolder;
     // Start is called before the first frame update
     void Start()
@@ -21,7 +22,8 @@ public class ATMCard : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Rotate(Vector3.up, 50 * Time.deltaTime);
+        gameObjectRotation.transform.Rotate(Vector3.up, 50 * Time.deltaTime);
+        auraHitbox.transform.rotation = Quaternion.identity;
         if (isDropped)
         {
             auraHitbox.gameObject.SetActive(true);
