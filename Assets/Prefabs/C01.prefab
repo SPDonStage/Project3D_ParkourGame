@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7827502373254613465}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Eyes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -667,7 +667,7 @@ GameObject:
   m_Component:
   - component: {fileID: 391236720457398380}
   - component: {fileID: 8150429548788107196}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Nose11
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -984,7 +984,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5389591495792696760}
   - component: {fileID: 6681245969953982227}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Mouth07
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1155,7 +1155,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1631594209984028205}
   - component: {fileID: 9223315586910523648}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Mouth02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2057,7 +2057,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2364905561315398463}
   - component: {fileID: 2175604416270587594}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Mouth08
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2263,7 +2263,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3666191566330886600}
   - component: {fileID: 8758728347992517206}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Mouth15
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2714,7 +2714,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4786492732972063464}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: MouthandNoses
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2825,7 +2825,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4613314206698894617}
   - component: {fileID: 6582934789709200687}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Mouth09
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2965,7 +2965,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5453350030119478138}
   - component: {fileID: 4609835518830628135}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Eye10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3105,7 +3105,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6924311080875551596}
   - component: {fileID: 8931075033611975625}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Mouth03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3499,7 +3499,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2029324589369680535}
   - component: {fileID: 4763529599045088348}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Nose10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3987,7 +3987,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4277207657068090387}
   - component: {fileID: 2040362528542253638}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Eye08
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4127,7 +4127,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9133116757067641300}
   - component: {fileID: 8188706427008742176}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Mouth04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4267,7 +4267,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5631339465829846168}
   - component: {fileID: 5202487405305140058}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Eye02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5312,7 +5312,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5114020128230685903}
   - component: {fileID: 3511409984648770904}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Nose14
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6982,7 +6982,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3201602776847088445}
   - component: {fileID: 5842877283422076340}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Eye15
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7294,7 +7294,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3659173051339018964}
   - component: {fileID: 4979186787353659019}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Mouth01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8193,7 +8193,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1791
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -8301,7 +8301,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8851182806906735710}
   - component: {fileID: 448899467449761167}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Eye09
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8441,7 +8441,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5726529412662594088}
   - component: {fileID: 7677756015398018055}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Eye11
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8785,7 +8785,7 @@ GameObject:
   m_Component:
   - component: {fileID: 252601675091260216}
   - component: {fileID: 2331269413263692684}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Mouth06
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9008,7 +9008,7 @@ GameObject:
   m_Component:
   - component: {fileID: 815318987759680669}
   - component: {fileID: 4124678124633668326}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Nose13
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9619,7 +9619,7 @@ GameObject:
   m_Component:
   - component: {fileID: 991276288044770517}
   - component: {fileID: 5765046725966306099}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Eye04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10302,7 +10302,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9095928551396750384}
   - component: {fileID: 4573264777851924303}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Nose12
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10858,6 +10858,9 @@ MonoBehaviour:
   turret_Prefab: {fileID: 7742213336119896658, guid: b8b036c99bd80ea4f887a5f83ea8b62b,
     type: 3}
   isTurretReview: 0
+  shield_Prefab: {fileID: 2165311413065574346, guid: 28debe3ae75b30640910ad56c07c8878,
+    type: 3}
+  shieldOn: 0
 --- !u!114 &7884367147532788466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10944,7 +10947,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5800546360708246085}
   - component: {fileID: 2292753368299621557}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Mouth05
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11147,7 +11150,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5899884930082834272}
   - component: {fileID: 8255291096053868807}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Eye01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11484,7 +11487,7 @@ GameObject:
   m_Component:
   - component: {fileID: 63488791226209669}
   - component: {fileID: 2094083545898301723}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Eye05
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12287,7 +12290,7 @@ GameObject:
   m_Component:
   - component: {fileID: 445634769799309010}
   - component: {fileID: 5313316445913496173}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Eye06
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12681,7 +12684,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8528554463069549134}
   - component: {fileID: 702143285620284748}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Eye12
   m_TagString: Untagged
   m_Icon: {fileID: 0}

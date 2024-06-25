@@ -21,6 +21,7 @@ public class SkillManagement : MonoBehaviour
     {
         Walling();
         Turret();
+        Shield();
     }
     private void FixedUpdate()
     {
@@ -176,5 +177,32 @@ public class SkillManagement : MonoBehaviour
             }
         }
        
+    }
+    //SHIELD
+    [Header("-=-SHIELD-=-")]
+    [SerializeField] private GameObject shield_Prefab;
+    private GameObject shieldGameObject;
+    public bool shieldOn;
+    public void Shield()
+    {
+        if (shieldOn)
+        {
+            if (!shieldGameObject)
+                shieldGameObject = Instantiate(shield_Prefab, transform.position + transform.forward * 2, transform.rotation);
+            else
+            {
+                shieldGameObject.SetActive(true);
+                shieldGameObject.transform.parent = transform;
+            }
+        }
+        else
+        {
+            if (shieldGameObject)
+            {
+                shieldGameObject.GetComponent<Shield>().isRestored = true;
+                shieldGameObject.GetComponent<Shield>().isRestoring = true;
+                shieldGameObject.GetComponent<Shield>().shieldGameObject.SetActive(false);
+            }
+        }
     }
 }

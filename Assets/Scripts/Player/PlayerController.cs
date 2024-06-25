@@ -535,7 +535,10 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started)
         {
-            GetComponent<SkillManagement>().ThrowSmoke();
+            if (GetComponent<SkillManagement>().shieldOn)
+                GetComponent<SkillManagement>().shieldOn = false;
+            else
+                GetComponent<SkillManagement>().shieldOn = true;
         }
     }
     public void OnSkill7(InputAction.CallbackContext context)
