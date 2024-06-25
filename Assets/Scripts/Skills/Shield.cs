@@ -28,14 +28,13 @@ public class Shield : MonoBehaviour
         }
         else
         {
-            StopCoroutine(healthRestore());
+            StopAllCoroutines();
         }
     }
     IEnumerator healthRestore()
     {
         while (health < maxHealth)
         {
-            Debug.Log(health);
             yield return new WaitForSeconds(1);
             health++;
         }
@@ -44,7 +43,6 @@ public class Shield : MonoBehaviour
     {
         if (collision.collider.CompareTag("Obstacle"))
         {
-            Debug.Log("zzzx");
             health--;
         }
     }

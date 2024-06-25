@@ -1090,7 +1090,7 @@ GameObject:
   - component: {fileID: 528668683}
   m_Layer: 3
   m_Name: Cube
-  m_TagString: Ground
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1189,7 +1189,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 528668678}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -1204,9 +1204,9 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 14
   m_CollisionDetection: 0
 --- !u!1001 &666595587
 PrefabInstance:
@@ -7133,7 +7133,7 @@ PrefabInstance:
     - target: {fileID: 6190681304280598128, guid: ea5137d8941523b4fa494ab6b4432f69,
         type: 3}
       propertyPath: m_CullingMask.m_Bits
-      value: 767
+      value: 1791
       objectReference: {fileID: 0}
     - target: {fileID: 6336593269985084727, guid: ea5137d8941523b4fa494ab6b4432f69,
         type: 3}
@@ -7175,6 +7175,12 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 7776173128310657816, guid: ea5137d8941523b4fa494ab6b4432f69,
+        type: 3}
+      propertyPath: shield_Prefab
+      value: 
+      objectReference: {fileID: 5212259441381883172, guid: 28debe3ae75b30640910ad56c07c8878,
+        type: 3}
     - target: {fileID: 7884367147532788466, guid: ea5137d8941523b4fa494ab6b4432f69,
         type: 3}
       propertyPath: virtualCamera
@@ -12255,6 +12261,8 @@ MonoBehaviour:
   turret_Prefab: {fileID: 7742213336119896658, guid: b8b036c99bd80ea4f887a5f83ea8b62b,
     type: 3}
   isTurretReview: 0
+  shield_Prefab: {fileID: 0}
+  shieldOn: 0
 --- !u!114 &5847838770740076752
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16981,7 +16989,6 @@ SceneRoots:
   - {fileID: 832575519}
   - {fileID: 1929938610}
   - {fileID: 1680296357}
-  - {fileID: 811871209}
   - {fileID: 528668682}
   - {fileID: 1434499048}
   - {fileID: 745322182}
@@ -16994,6 +17001,7 @@ SceneRoots:
   - {fileID: 400154238}
   - {fileID: 751435716}
   - {fileID: 6592734012322707858}
+  - {fileID: 811871209}
   - {fileID: 131696749}
   - {fileID: 294247044}
   - {fileID: 1172228668}

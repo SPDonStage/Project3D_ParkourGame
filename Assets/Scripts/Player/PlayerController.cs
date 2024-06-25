@@ -536,9 +536,15 @@ public class PlayerController : MonoBehaviour
         if (context.started)
         {
             if (GetComponent<SkillManagement>().shieldOn)
+            {
                 GetComponent<SkillManagement>().shieldOn = false;
+                GetComponent<SkillManagement>().ShieldOff();
+            }
             else
+            {
                 GetComponent<SkillManagement>().shieldOn = true;
+
+            }
         }
     }
     public void OnSkill7(InputAction.CallbackContext context)

@@ -21,7 +21,7 @@ public class SkillManagement : MonoBehaviour
     {
         Walling();
         Turret();
-        Shield();
+        ShieldOn();
     }
     private void FixedUpdate()
     {
@@ -183,19 +183,26 @@ public class SkillManagement : MonoBehaviour
     [SerializeField] private GameObject shield_Prefab;
     private GameObject shieldGameObject;
     public bool shieldOn;
-    public void Shield()
+    public void ShieldOn()
     {
         if (shieldOn)
         {
+           
             if (!shieldGameObject)
-                shieldGameObject = Instantiate(shield_Prefab, transform.position + transform.forward * 2, transform.rotation);
+                shieldGameObject = Instantiate(shield_Prefab, transform.position + transform.forward * 3, transform.rotation);
             else
             {
-                shieldGameObject.SetActive(true);
+                shieldGameObject.GetComponent<Shield>().isRestored = false;
+                shieldGameObject.transform.GetChild(0).gameObject.SetActive(true); //shield object is child
                 shieldGameObject.transform.parent = transform;
+                shieldGameObject.transform.position = transform.position + transform.forward * 3; 
+                shieldGameObject.transform.rotation = transform.rotation;
             }
         }
-        else
+    }
+    public void ShieldOff()
+    {
+        if (!shieldOn)
         {
             if (shieldGameObject)
             {
