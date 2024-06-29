@@ -1199,10 +1199,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3a63144ec9ccb0468abdf65441163cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isDropped: 0
-  auraHitbox: {fileID: 0}
-  gameObjectRotation: {fileID: 0}
-  moneyValue: 0
+  animator: {fileID: 6360924260762424137}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!95 &6360924260762424137
 Animator:
   serializedVersion: 7
