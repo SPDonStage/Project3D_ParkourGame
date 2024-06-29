@@ -116,7 +116,6 @@ public class PlayerController : MonoBehaviour
         jumpForce = jumpForceValue;
         SwitchCharacterStateAnimation(state);
     }
-    // NewParkourAction action;
     // Update is called once per frame
     void Update()
     {
@@ -147,8 +146,6 @@ public class PlayerController : MonoBehaviour
         {
             WallRun();
         }
-        //   if (state != CharacterState.Vault && state == CharacterState.Ground)
-        //       onJumping = true;      
         Movement();
         //   Crouch();
         //Slide();
@@ -165,16 +162,15 @@ public class PlayerController : MonoBehaviour
                     {
                         if (action.checkIfAvailable(environmentChecker.checkData(), transform, spineHeight)) //check which action available
                         {
-                            //    test = true;Debug.Log("1");
-                            //  animator.SetBool("isVault", true);
-                            StartCoroutine(VaultOverObstacle(action));
-                            break;
+                            if (!action.isUseSpineHeight) //if not use action on air
+                            {
+                                StartCoroutine(VaultOverObstacle(action));
+                                break;
+                            }
                         }
                     }
                 }
             }
-
-
             if (onJumping)
             {
                 Jump();
@@ -275,7 +271,7 @@ public class PlayerController : MonoBehaviour
                         {
                             if (newParkourActions[0].checkIfAvailable(environmentChecker.checkData(), transform, spineHeight))
                             {
-                                StartCoroutine(VaultOverObstacle(newParkourActions[0])); //newParkourActions[0] is climb wall action
+                                StartCoroutine(VaultOverObstacle(newParkourActions[0])); //newParkourActions[0] is climb wall action on air
                             }
                         }
                     }
@@ -373,15 +369,6 @@ public class PlayerController : MonoBehaviour
     {
         animator.SetBool("isSliding", false);
         SwitchCharacterStateAnimation(state = CharacterState.Crouch);
-        //if (playerInput.Player.Crouch.ReadValue<float>() == 1 && playerInput.Player.Sprint.ReadValue<float>() == 1 && vector3Movement.z > 0)
-        //{
-        //    SwitchCharacterStateAnimation(state = CharacterState.Slide);
-        //    animator.SetBool("isSliding", true);
-        //}
-        //else
-        //{
-        //    animator.SetBool("isSliding", false);
-        //}
     }
     void SlopeSlide() //use character controller movement for slope sliding
     {
@@ -423,11 +410,6 @@ public class PlayerController : MonoBehaviour
         if (slopeAngle < characterController.slopeLimit)
         {
             characterController.Move(new Vector3(antiStandingOnSlope_Ray.normal.x, -antiStandingOnSlope_Ray.normal.y, antiStandingOnSlope_Ray.normal.z) * 5 * Time.fixedDeltaTime);
-            // SwitchCharacterStateAnimation(state = CharacterState.Jump);
-        }
-        else
-        {
-
         }
 
     }

@@ -10,7 +10,7 @@ public class NewParkourAction : ScriptableObject
     [SerializeField] float maxHeight;
     //  [SerializeField] bool isLookAtObstacle = true; //optional
     // private Quaternion rotatingToObstacle;
-    [SerializeField] bool isUseSpineHeight;
+    [SerializeField] public bool isUseSpineHeight;
     public float checkHeight;
     [Header("---Target Matching---")]
     [SerializeField] bool isMatching = true; //optional

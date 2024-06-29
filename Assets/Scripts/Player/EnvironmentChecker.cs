@@ -35,7 +35,7 @@ public class EnvironmentChecker : MonoBehaviour
                         Yoffset_Ray_Length, layerMask);
         if (objectData.Yoffset_Ray_Hit.collider)
         {
-            originPosDownward = objectData.Yoffset_Ray_Hit.point + (transform.forward * 0.3f) + new Vector3(0, characterController.height + .5f, 0);
+            originPosDownward = objectData.Yoffset_Ray_Hit.point + (transform.forward * 0.15f) + new Vector3(0, characterController.height + .5f, 0);
             objectData.Downward_Ray_Hit_Check = Physics.Raycast(originPosDownward, Vector3.down, out objectData.Downward_Ray_Hit, characterController.height + .5f, layerMask);
             objectData.rotationToRotate = objectData.Yoffset_Ray_Hit.point - originPos;
             objectData.angleFacingToWall = Vector3.Angle(transform.forward, -objectData.Yoffset_Ray_Hit.normal);
@@ -50,7 +50,7 @@ public class EnvironmentChecker : MonoBehaviour
                         Yoffset_Ray_Length, layerMask); Debug.DrawRay(originPos, transform.forward, Color.gray); Gizmos.DrawSphere(originPos, 0.05f);
         if (objectData.Yoffset_Ray_Hit.collider)
         {
-            originPosDownward = objectData.Yoffset_Ray_Hit.point + (transform.forward * 0.3f) + new Vector3(0, characterController.height + .5f, 0);
+            originPosDownward = objectData.Yoffset_Ray_Hit.point + (transform.forward * 0.15f) + new Vector3(0, characterController.height + .5f, 0);
             objectData.Downward_Ray_Hit_Check = Physics.Raycast(originPosDownward, Vector3.down, out objectData.Downward_Ray_Hit, characterController.height + .5f, layerMask);
             Gizmos.color = Color.blue; 
             Gizmos.DrawRay(transform.position, objectData.Yoffset_Ray_Hit.point);

@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7973397751567137302}
     m_Modifications:
+    - target: {fileID: -5420202030522135654, guid: 8ae872debf901d7418fb375b3390b1cc, type: 3}
+      propertyPath: m_Convex
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5058035166398066921, guid: 8ae872debf901d7418fb375b3390b1cc, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -175,7 +179,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bca6cd1b8d603a3468ef47006920431c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: {x: 0, y: 3, z: 0}
+  rotationSpeed: {x: 0, y: 1, z: 0}
 --- !u!4 &7973397751567137302 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8c835380de640324c92ee70cae574753, type: 3}
